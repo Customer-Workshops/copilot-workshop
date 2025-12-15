@@ -1,0 +1,1046 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Learn IDE-based GitHub Copilot features through hands-on exercises. Master code completion, Copilot Chat, agent mode, and more.">
+  <meta name="theme-color" content="#6C21D9">
+  <title>Start Coding with AI - GitHub Copilot Workshop</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', var(--font-family); }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="site-header" role="banner">
+    <div class="header-brand">
+      <svg class="header-logo" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+      </svg>
+      <a href="../index.html" class="header-title">GitHub Copilot Workshop</a>
+    </div>
+    <nav class="header-nav" aria-label="Main navigation">
+      <a href="../index.html" class="header-nav-link">Home</a>
+      <a href="start-coding.html" class="header-nav-link active">Start Coding with AI</a>
+      <a href="pro-features.html" class="header-nav-link">Copilot Pro Features</a>
+      <button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark mode">
+        <svg class="theme-toggle-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span class="theme-toggle-text">Dark</span>
+      </button>
+    </nav>
+  </header>
+
+  <!-- Workshop Layout -->
+  <div class="workshop-layout">
+    <!-- Sidebar Navigation -->
+    <aside id="workshop-sidebar" class="workshop-sidebar" role="navigation" aria-label="Workshop steps">
+      <div class="sidebar-header">
+        <a href="../index.html" class="sidebar-back">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <line x1="19" y1="12" x2="5" y2="12"/>
+            <polyline points="12 19 5 12 12 5"/>
+          </svg>
+          Back to Home
+        </a>
+        <h2 class="sidebar-title">Start Coding with AI</h2>
+      </div>
+      
+      <nav class="sidebar-nav">
+        <ol class="sidebar-nav-list">
+          <li class="sidebar-nav-item">
+            <a href="#step-1" class="sidebar-nav-link active">
+              <span class="sidebar-nav-number">1</span>
+              <span class="sidebar-nav-text">Project Setup</span>
+            </a>
+          </li>
+          <li class="sidebar-nav-item">
+            <a href="#step-2" class="sidebar-nav-link">
+              <span class="sidebar-nav-number">2</span>
+              <span class="sidebar-nav-text">Code Completion</span>
+            </a>
+          </li>
+          <li class="sidebar-nav-item">
+            <a href="#step-3" class="sidebar-nav-link">
+              <span class="sidebar-nav-number">3</span>
+              <span class="sidebar-nav-text">Copilot Chat</span>
+            </a>
+          </li>
+          <li class="sidebar-nav-item">
+            <a href="#step-4" class="sidebar-nav-link">
+              <span class="sidebar-nav-number">4</span>
+              <span class="sidebar-nav-text">Copilot Edit</span>
+            </a>
+          </li>
+          <li class="sidebar-nav-item">
+            <a href="#step-5" class="sidebar-nav-link">
+              <span class="sidebar-nav-number">5</span>
+              <span class="sidebar-nav-text">Agent Mode</span>
+            </a>
+          </li>
+          <li class="sidebar-nav-item">
+            <a href="#step-6" class="sidebar-nav-link">
+              <span class="sidebar-nav-number">6</span>
+              <span class="sidebar-nav-text">End-to-End App Development</span>
+            </a>
+          </li>
+          <li class="sidebar-nav-item">
+            <a href="#step-7" class="sidebar-nav-link">
+              <span class="sidebar-nav-number">7</span>
+              <span class="sidebar-nav-text">Plan Mode</span>
+            </a>
+          </li>
+          <li class="sidebar-nav-item">
+            <a href="#step-8" class="sidebar-nav-link">
+              <span class="sidebar-nav-number">8</span>
+              <span class="sidebar-nav-text">Add Functionality</span>
+            </a>
+          </li>
+          <li class="sidebar-nav-item">
+            <a href="#step-9" class="sidebar-nav-link">
+              <span class="sidebar-nav-number">9</span>
+              <span class="sidebar-nav-text">Add Unit Tests</span>
+            </a>
+          </li>
+          <li class="sidebar-nav-item">
+            <a href="#step-10" class="sidebar-nav-link">
+              <span class="sidebar-nav-number">10</span>
+              <span class="sidebar-nav-text">Add Documentation</span>
+            </a>
+          </li>
+          <li class="sidebar-nav-item">
+            <a href="#step-11" class="sidebar-nav-link">
+              <span class="sidebar-nav-number">11</span>
+              <span class="sidebar-nav-text">Custom Agents (Optional)</span>
+            </a>
+          </li>
+        </ol>
+      </nav>
+
+      <div class="progress-container">
+        <div class="progress-label">
+          <span>Progress</span>
+          <span><span class="progress-current">1</span> / <span class="progress-total">11</span></span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" style="width: 9%;"></div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Sidebar overlay for mobile -->
+    <div id="sidebar-overlay" class="sidebar-overlay" aria-hidden="true"></div>
+
+    <!-- Main Content -->
+    <main class="workshop-content" role="main">
+      <div class="workshop-content-inner">
+
+        <!-- Step 1: Project Setup -->
+        <section id="step-1" class="step-section active" aria-labelledby="step-1-title">
+          <header class="step-header">
+            <span class="step-number">Step 1 of 11</span>
+            <h1 id="step-1-title" class="step-title">Project Setup</h1>
+            <p class="step-duration">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12 6 12 12 16 14"/>
+              </svg>
+              15 minutes
+            </p>
+          </header>
+
+          <p>You can use your own repository or work with the sample repository available at:</p>
+
+          <p><strong>Project URL</strong>: <a href="https://github.com/Handson-Copilot-Workshop-APAC/2025-github-ur-copilot-workshop" target="_blank" rel="noopener noreferrer">https://github.com/Handson-Copilot-Workshop-APAC/2025-github-ur-copilot-workshop</a></p>
+
+          <h2>Step 1: Fork the Repository</h2>
+          <p>First, open the project URL above in your browser and fork the repository:</p>
+          <ol>
+            <li>Open the project URL in your browser</li>
+            <li>Click the <strong>Fork</strong> button in the top right</li>
+          </ol>
+
+          <figure class="image-container">
+            <img src="img/screenshot_fork_arrow.png" alt="Click Fork button in the GitHub repository header">
+            <figcaption>Click the Fork button to create your own copy of the repository</figcaption>
+          </figure>
+
+          <ol start="3">
+            <li>Click the <code>Create fork</code> button on the fork creation screen. Once the fork is complete, a copy of the repository will be created in your GitHub account.</li>
+          </ol>
+
+          <h2>Step 2: Development Environment Setup</h2>
+          <p>Using your forked repository, you can start the project using one of the following methods:</p>
+
+          <h3>Method A: Use "GitHub Codespaces"</h3>
+          <ol>
+            <li>On your forked repository page from the previous step, click the green <strong>Code</strong> button</li>
+            <li>Select the <strong>Codespaces</strong> tab</li>
+            <li>Click <strong>Create codespace on main</strong></li>
+          </ol>
+
+          <figure class="image-container">
+            <img src="img/codespaces.png" alt="GitHub Codespaces setup dialog showing the Code button and Codespaces tab">
+            <figcaption>Setting up GitHub Codespaces for your project</figcaption>
+          </figure>
+
+          <div class="info-box tip">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="12" y1="16" x2="12" y2="12"/>
+              <line x1="12" y1="8" x2="12.01" y2="8"/>
+            </svg>
+            <div class="info-box-content">
+              <strong>Tip</strong>
+              <p>Using Codespaces launches a VS Code-like environment in your browser, allowing you to start development immediately without any local setup.</p>
+            </div>
+          </div>
+
+          <h3>Method B: Clone to Local Environment</h3>
+          <p>If you have VSCode installed locally:</p>
+          <ol>
+            <li>Open Terminal or Command Prompt</li>
+            <li>Clone your forked repository with the following command:</li>
+          </ol>
+
+          <pre><code>git clone https://github.com/&lt;your-username&gt;/2025-github-ur-copilot-workshop.git</code></pre>
+
+          <ol start="3">
+            <li>Navigate to the cloned directory:</li>
+          </ol>
+
+          <pre><code>cd 2025-github-ur-copilot-workshop</code></pre>
+
+          <ol start="4">
+            <li>Open the project in VSCode</li>
+          </ol>
+
+          <h2>Step 3: Workspace Setup </h2>
+          <p>After opening the project, please install the following extensions (if you haven't):</p>
+          <ol>
+            <li>Install <strong>GitHub Copilot</strong> extension</li>
+            <li>Login to <strong>GitHub Copilot</strong> using your GitHub account</li>
+          </ol>
+
+          <nav class="step-navigation" aria-label="Step navigation">
+            <button class="step-nav-button step-nav-prev" disabled aria-label="Previous step">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <line x1="19" y1="12" x2="5" y2="12"/>
+                <polyline points="12 19 5 12 12 5"/>
+              </svg>
+              Previous
+            </button>
+            <button class="step-nav-button primary step-nav-next" aria-label="Next step">
+              Next
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <line x1="5" y1="12" x2="19" y2="12"/>
+                <polyline points="12 5 19 12 12 19"/>
+              </svg>
+            </button>
+          </nav>
+        </section>
+
+        <!-- Step 2: Code Completion -->
+        <section id="step-2" class="step-section" aria-labelledby="step-2-title">
+          <header class="step-header">
+            <span class="step-number">Step 2 of 11</span>
+            <h1 id="step-2-title" class="step-title">Code Completion</h1>
+            <p class="step-duration">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12 6 12 12 16 14"/>
+              </svg>
+              10 minutes
+            </p>
+          </header>
+
+          <p>GitHub Copilot provides intelligent code suggestions as you type. Let's explore how to use this feature effectively.</p>
+
+          <h2>How Code Completion Works</h2>
+          <p>As you write code, Copilot analyzes the context of your file and suggests completions. These suggestions appear as gray "ghost text" that you can accept with the <kbd>Tab</kbd> key.</p>
+
+          <h3>Example Prompt</h3>
+          <p>Add a New Function Using a Prompt</p>: Start typing a comment describing what you want:
+          <pre><code>Write a function to calculate the factorial of a number.</code></pre>
+          <p>Copilot will automatically suggest the full function implementation as ghost text.</p>
+
+          <p>Add a New Class Using a Prompt</p>: Begin describing a class structure:
+          <pre><code>Create a class named Invoice with amount, tax, and a method to calculate total.</code></pre>
+          <p>Copilot will generate the class definition and related methods.</p>
+
+      
+          <p>Generate Helper Methods</p>
+          <pre><code>Add a utility function to format a date as DD-MM-YYYY.</code></pre>
+          <p>Copilot will propose a ready-to-use helper function.</p>
+
+          <p>Complete Incomplete Code</p>
+          <pre><code>function addUser(user) {
+              // validate user inputs</code></pre>
+          <p>Copilot will expand the validation logic and complete the rest of the function.</p>
+
+          <p>Add Comments or Documentation</p>
+          <pre><code>Explain what this function does and list its parameters</code></pre>
+          <p>Copilot will auto-generate a documentation block.</p>
+
+
+          <div class="info-box note">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="12" y1="16" x2="12" y2="12"/>
+              <line x1="12" y1="8" x2="12.01" y2="8"/>
+            </svg>
+            <div class="info-box-content">
+              <strong>Note</strong>
+              <p>If you don't see suggestions, make sure you're signed in to your GitHub account and have an active Copilot subscription.</p>
+            </div>
+          </div>
+
+          <nav class="step-navigation" aria-label="Step navigation">
+            <button class="step-nav-button step-nav-prev" aria-label="Previous step">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <line x1="19" y1="12" x2="5" y2="12"/>
+                <polyline points="12 19 5 12 12 5"/>
+              </svg>
+              Previous
+            </button>
+            <button class="step-nav-button primary step-nav-next" aria-label="Next step">
+              Next
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <line x1="5" y1="12" x2="19" y2="12"/>
+                <polyline points="12 5 19 12 12 19"/>
+              </svg>
+            </button>
+          </nav>
+        </section>
+
+        <!-- Step 3: Copilot Chat -->
+        <section id="step-3" class="step-section" aria-labelledby="step-3-title">
+          <header class="step-header">
+            <span class="step-number">Step 3 of 11</span>
+            <h1 id="step-3-title" class="step-title">Copilot Chat</h1>
+            <p class="step-duration">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12 6 12 12 16 14"/>
+              </svg>
+              15 minutes
+            </p>
+          </header>
+
+          <p>Copilot Chat is an interactive AI assistant that helps you understand code, generate functions, and get coding guidance through natural language conversations.</p>
+
+          <h2>Opening Copilot Chat</h2>
+          <ol>
+            <li>Click the <strong>Chat</strong> icon (chat bubble) in the VSCode sidebar</li>
+            <li>Or open the Chat panel with <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>I</kbd> (macOS: <kbd>Ctrl</kbd>+<kbd>Cmd</kbd>+<kbd>I</kbd>)</li>
+          </ol>
+
+          <figure class="image-container">
+            <img src="img/ask-mode.png" alt="Copilot Chat interface in VS Code showing the Ask mode">
+            <figcaption>The Copilot Chat panel in VS Code</figcaption>
+          </figure>
+
+          <h2>Key Features</h2>
+
+          <h3>1. Explain Code</h3>
+          <p>Option 1: Select code and ask Copilot to explain it:</p>
+          <pre><code>Please explain this entire file.</code></pre>
+
+          <figure class="image-container">
+            <img src="img/ask-explain.png" alt="Copilot explaining code in the chat panel">
+            <figcaption>Copilot provides detailed explanations of your code</figcaption>
+          </figure>
+
+          <p>Option 2: Select code and ask Copilot to explain it using slash commands:</p>
+          <pre><code>/explain</code></pre>
+
+          <h3>2. Generate Functions</h3>
+          <p>Ask Copilot to write code for you:</p>
+          <pre><code>Create a function that validates an email address and returns true if valid.</code></pre>
+
+          <h3>3. Translate to New Technology</h3>
+          <p>Convert code from one language or framework to another:</p>
+          <pre><code>Convert this JavaScript function to Python.</code></pre>
+
+          <h3>4. Code Improvement</h3>
+          <p>Get suggestions to improve your code quality:</p>
+          <pre><code>How can I improve the performance of this function?</code></pre>
+
+          <div class="info-box tip">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="12" y1="16" x2="12" y2="12"/>
+              <line x1="12" y1="8" x2="12.01" y2="8"/>
+            </svg>
+            <div class="info-box-content">
+              <strong>Tip</strong>
+              <p>Use the <code>#</code> symbol to reference files in your prompts, like <code>#app.py</code> to give Copilot context about specific files.</p>
+            </div>
+          </div>
+
+          <nav class="step-navigation" aria-label="Step navigation">
+            <button class="step-nav-button step-nav-prev" aria-label="Previous step">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <line x1="19" y1="12" x2="5" y2="12"/>
+                <polyline points="12 19 5 12 12 5"/>
+              </svg>
+              Previous
+            </button>
+            <button class="step-nav-button primary step-nav-next" aria-label="Next step">
+              Next
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <line x1="5" y1="12" x2="19" y2="12"/>
+                <polyline points="12 5 19 12 12 19"/>
+              </svg>
+            </button>
+          </nav>
+        </section>
+
+        <!-- Step 4: Copilot Edit -->
+        <section id="step-4" class="step-section" aria-labelledby="step-4-title">
+          <header class="step-header">
+            <span class="step-number">Step 4 of 11</span>
+            <h1 id="step-4-title" class="step-title">Copilot Edit</h1>
+            <p class="step-duration">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12 6 12 12 16 14"/>
+              </svg>
+              10 minutes
+            </p>
+          </header>
+
+          <p>Copilot Edit allows you to make changes across multiple files simultaneously through natural language instructions.</p>
+
+          <h2>Using Copilot Edit</h2>
+          <p>Copilot Edit is particularly useful when you need to:</p>
+          <ul>
+            <li>Refactor code across multiple files</li>
+            <li>Add a feature that spans several components</li>
+            <li>Apply consistent changes throughout your codebase</li>
+          </ul>
+
+          <h2>How to Use</h2>
+          <ol>
+            <li>Open Copilot Chat</li>
+            <li>Select <strong>Edit</strong> mode from the mode selector</li>
+            <li>Add Files or Folders to include in the edit</li>
+            <li>Describe the changes you want to make</li>
+            <li>Copilot will show you a diff of the proposed changes</li>
+            <li>Review and accept or reject each change</li>
+          </ol>
+
+          <h3>Example Prompt</h3>
+          <pre><code>Add error handling to all API endpoint functions in the routes folder.</code></pre>
+
+          <div class="info-box note">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="12" y1="16" x2="12" y2="12"/>
+              <line x1="12" y1="8" x2="12.01" y2="8"/>
+            </svg>
+            <div class="info-box-content">
+              <strong>Best Practice</strong>
+              <p>Always review the changes Copilot suggests before accepting them. The diff view helps you understand exactly what will be modified.</p>
+            </div>
+          </div>
+
+          <nav class="step-navigation" aria-label="Step navigation">
+            <button class="step-nav-button step-nav-prev" aria-label="Previous step">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <line x1="19" y1="12" x2="5" y2="12"/>
+                <polyline points="12 19 5 12 12 5"/>
+              </svg>
+              Previous
+            </button>
+            <button class="step-nav-button primary step-nav-next" aria-label="Next step">
+              Next
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <line x1="5" y1="12" x2="19" y2="12"/>
+                <polyline points="12 5 19 12 12 19"/>
+              </svg>
+            </button>
+          </nav>
+        </section>
+
+        <!-- Step 5: Agent Mode -->
+        <section id="step-5" class="step-section" aria-labelledby="step-5-title">
+          <header class="step-header">
+            <span class="step-number">Step 5 of 11</span>
+            <h1 id="step-5-title" class="step-title">Agent Mode</h1>
+            <p class="step-duration">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12 6 12 12 16 14"/>
+              </svg>
+              15 minutes
+            </p>
+          </header>
+
+          <p>Agent Mode is Copilot's most autonomous feature. It can execute multi-step tasks, run commands, and make complex changes across your project.</p>
+
+          <h2>What Makes Agent Mode Different</h2>
+          <ul>
+            <li><strong>Autonomous Execution</strong>: Copilot can run terminal commands, create files, and iterate on solutions</li>
+            <li><strong>Error Recovery</strong>: When errors occur, Agent Mode attempts to fix them automatically</li>
+            <li><strong>Multi-file Operations</strong>: Can modify many files as part of a single task</li>
+          </ul>
+
+          <h2>Enabling Agent Mode</h2>
+          <ol>
+            <li>Open Copilot Chat</li>
+            <li>Select <strong>Agent</strong> from the mode selector at the bottom of the chat panel</li>
+          </ol>
+
+          <h2>Example Tasks for Agent Mode</h2>
+          <pre><code>Create a new Express.js API endpoint for user authentication with JWT tokens.</code></pre>
+
+          <pre><code>Set up a complete testing framework with example tests for the existing functions.</code></pre>
+
+          <figure class="image-container">
+            <img src="img/agent-mode.png" alt="Agent mode implementing code changes automatically">
+            <figcaption>Agent Mode working autonomously on a coding task</figcaption>
+          </figure>
+
+          <div class="info-box warning">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+              <line x1="12" y1="9" x2="12" y2="13"/>
+              <line x1="12" y1="17" x2="12.01" y2="17"/>
+            </svg>
+            <div class="info-box-content">
+              <strong>Caution</strong>
+              <p>Agent Mode can run commands and modify files. Always review the actions it proposes before allowing them to execute.</p>
+            </div>
+          </div>
+
+          <nav class="step-navigation" aria-label="Step navigation">
+            <button class="step-nav-button step-nav-prev" aria-label="Previous step">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <line x1="19" y1="12" x2="5" y2="12"/>
+                <polyline points="12 19 5 12 12 5"/>
+              </svg>
+              Previous
+            </button>
+            <button class="step-nav-button primary step-nav-next" aria-label="Next step">
+              Next
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <line x1="5" y1="12" x2="19" y2="12"/>
+                <polyline points="12 5 19 12 12 19"/>
+              </svg>
+            </button>
+          </nav>
+        </section>
+
+        <!-- Step 6: End-to-End App Development -->
+        <section id="step-6" class="step-section" aria-labelledby="step-6-title">
+          <header class="step-header">
+            <span class="step-number">Step 6 of 11</span>
+            <h1 id="step-6-title" class="step-title">End-to-End App Development</h1>
+            <p class="step-duration">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12 6 12 12 16 14"/>
+              </svg>
+              60 minutes
+            </p>
+          </header>
+
+          <p>Let's build a complete enterprise-ready application from scratch using Copilot. We'll create an Employee Management System with CRUD operations.</p>
+
+          <h2>Define Your Requirements</h2>
+          <p>Start by providing Copilot with a clear requirement prompt for an enterprise application:</p>
+          <pre><code>I want to build an Employee Management System with the following requirements:
+
+## Functional Requirements
+- Create, Read, Update, and Delete (CRUD) operations for employee records
+- Employee fields: ID, Name, Email, Department, Role, Hire Date, Salary
+- Search and filter employees by department and role
+- Basic authentication with login/logout functionality
+- Dashboard showing employee statistics
+
+## Non-Functional Requirements
+- RESTful API design
+- Input validation and error handling
+- Responsive UI that works on desktop and mobile
+- Clean, maintainable code following best practices
+
+Please suggest an architecture for this application.</code></pre>
+
+          <h2>Generate App Structure</h2>
+          <p>Ask Copilot to generate the application structure based on your preferred tech stack:</p>
+          <pre><code>Based on the requirements above, please generate the project structure for this application using [YOUR PREFERRED STACK].
+
+For example:
+- Backend: Python Flask / Node.js Express / Java Spring Boot
+- Frontend: React / Vue.js / Plain HTML/CSS/JavaScript
+- Database: SQLite / PostgreSQL / MongoDB
+
+Please create the folder structure and initial files with boilerplate code.</code></pre>
+
+
+          <h2>Optional: Add UI from Mock or Drawing</h2>
+          <p>If you have a UI mockup or wireframe, you can attach it to help Copilot generate matching UI components:</p>
+          <ol>
+            <li>Attach your UI mockup image in Copilot Chat</li>
+            <li>Use a prompt like:</li>
+          </ol>
+          <pre><code>Based on the attached UI mockup, please generate the HTML/CSS for this interface. 
+Match the layout, colors, and styling as closely as possible.
+Make the design responsive for mobile devices.</code></pre>
+
+          <div class="info-box tip">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="12" y1="16" x2="12" y2="12"/>
+              <line x1="12" y1="8" x2="12.01" y2="8"/>
+            </svg>
+            <div class="info-box-content">
+              <strong>Tip</strong>
+              <p>You can use hand-drawn sketches or wireframe tools like Figma, Balsamiq, or even simple diagrams to guide Copilot's UI generation.</p>
+            </div>
+          </div>
+
+          <h2>Save the Architecture</h2>
+          <p>Use Agent Mode to save the architecture to a file:</p>
+          <pre><code>Save the architecture suggestions to an architecture.md file in the project root.</code></pre>
+
+          <figure class="image-container">
+            <img src="img/arch-result.png" alt="Architecture document saved">
+            <figcaption>Architecture documentation is now part of your project</figcaption>
+          </figure>
+
+          <nav class="step-navigation" aria-label="Step navigation">
+            <button class="step-nav-button step-nav-prev" aria-label="Previous step">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <line x1="19" y1="12" x2="5" y2="12"/>
+                <polyline points="12 19 5 12 12 5"/>
+              </svg>
+              Previous
+            </button>
+            <button class="step-nav-button primary step-nav-next" aria-label="Next step">
+              Next
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <line x1="5" y1="12" x2="19" y2="12"/>
+                <polyline points="12 5 19 12 12 19"/>
+              </svg>
+            </button>
+          </nav>
+        </section>
+
+        <!-- Step 7: Plan Mode -->
+        <section id="step-7" class="step-section" aria-labelledby="step-7-title">
+          <header class="step-header">
+            <span class="step-number">Step 7 of 11</span>
+            <h1 id="step-7-title" class="step-title">Plan Mode</h1>
+            <p class="step-duration">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12 6 12 12 16 14"/>
+              </svg>
+              10 minutes
+            </p>
+          </header>
+
+          <p>Plan Mode helps you create a structured development plan before implementation. This is part of <strong>Spec-Driven Development</strong>, a recommended approach for AI-assisted coding.</p>
+
+          <h2>Creating a Development Plan</h2>
+          <ol>
+            <li>Attach your architecture document using <code>#architecture.md</code></li>
+            <li>Select <strong>Plan</strong> mode in Copilot Chat</li>
+          </ol>
+
+          <figure class="image-container">
+            <img src="img/plan-mode.png" alt="Selecting Plan mode in Copilot Chat">
+            <figcaption>Switch to Plan mode for structured planning</figcaption>
+          </figure>
+
+          <p>Enter the following prompt:</p>
+          <pre><code>Based on the attached document, please create step-by-step development plan that can be followed by the coding agents.
+Please suggest what granularity should be used to implement functions in an easy-to-test steps.</code></pre>
+
+          <div class="info-box tip">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="12" y1="16" x2="12" y2="12"/>
+              <line x1="12" y1="8" x2="12.01" y2="8"/>
+            </svg>
+            <div class="info-box-content">
+              <strong>Tip</strong>
+              <p>If there are points that should be improved, point them out! For example: "Considering the ease of unit testing, please also list any improvements or additions needed to the current plan."</p>
+            </div>
+          </div>
+
+          <h2>Saving the Plan</h2>
+          <p>Switch to Agent mode and save the plan:</p>
+          <pre><code>Save the development plan in a file called plan.md</code></pre>
+
+          <figure class="image-container">
+            <img src="img/plan-result.png" alt="Development plan saved to file">
+            <figcaption>Your development plan is now documented</figcaption>
+          </figure>
+
+          <p>Now you have two specification files: <code>architecture.md</code> and <code>plan.md</code>. These will guide Copilot during implementation.</p>
+
+          <nav class="step-navigation" aria-label="Step navigation">
+            <button class="step-nav-button step-nav-prev" aria-label="Previous step">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <line x1="19" y1="12" x2="5" y2="12"/>
+                <polyline points="12 19 5 12 12 5"/>
+              </svg>
+              Previous
+            </button>
+            <button class="step-nav-button primary step-nav-next" aria-label="Next step">
+              Next
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <line x1="5" y1="12" x2="19" y2="12"/>
+                <polyline points="12 5 19 12 12 19"/>
+              </svg>
+            </button>
+          </nav>
+        </section>
+
+        <!-- Step 8: Add Functionality -->
+        <section id="step-8" class="step-section" aria-labelledby="step-8-title">
+          <header class="step-header">
+            <span class="step-number">Step 8 of 11</span>
+            <h1 id="step-8-title" class="step-title">Add Functionality</h1>
+            <p class="step-duration">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12 6 12 12 16 14"/>
+              </svg>
+              15 minutes
+            </p>
+          </header>
+
+          <p>Now let's implement the application using Copilot's Agent mode with our specification documents.</p>
+
+          <h2>Custom Instructions</h2>
+          <p>Before implementing, set up custom instructions to guide Copilot:</p>
+          <ol>
+            <li>Open <code>.github/copilot-instructions.md</code></li>
+            <li>Add the following lines:</li>
+          </ol>
+
+          <pre><code>Before making any big changes to the project, always check the architecture documentation in `architecture.md` to ensure alignment with the overall design and goals.</code></pre>
+
+          <figure class="image-container">
+            <img src="img/copilot-inst.png" alt="Custom instructions file">
+            <figcaption>Custom instructions help Copilot understand your project conventions</figcaption>
+          </figure>
+
+          <h2>Prompt Files</h2>
+          <p>For reusable prompts, create prompt files at <code>.github/prompts/*.prompt.md</code>:</p>
+
+          <pre><code>---
+agent: 'agent'
+description: 'Generate a clear code explanation with examples'
+---
+
+Explain the following code in a clear, beginner-friendly way:
+
+Code to explain: ${input:code:Paste your code here}
+Target audience: ${input:audience:Who is this explanation for?}
+
+Please provide:
+* A brief overview of what the code does
+* A step-by-step breakdown of the main parts
+* Explanation of key concepts
+* A simple example showing how it works</code></pre>
+
+          <figure class="image-container">
+            <img src="img/prompt-result.png" alt="Prompt file in action">
+            <figcaption>Prompt files provide reusable, structured prompts</figcaption>
+          </figure>
+
+          <h2>Start Implementation</h2>
+          <p>Attach the <code>plan.md</code> file and use this prompt:</p>
+          <pre><code>Please implement the development of this project using `plan.md` and other necessary documents.
+If there are additional considerations needed, please ask me questions.</code></pre>
+
+          <figure class="image-container">
+            <img src="img/agent-mode.png" alt="Copilot implementing the application">
+            <figcaption>Copilot implements the application following the plan</figcaption>
+          </figure>
+
+          <h2>Verify Implementation</h2>
+          <p>Once implementation is complete, check:</p>
+          <ol>
+            <li><strong>Directory Structure</strong>: Is it structured according to the recommended architecture?</li>
+            <li><strong>Basic Files</strong>: Are necessary files (app.py, HTML templates, CSS files, etc.) created?</li>
+            <li><strong>Operation Check</strong>: Run simple tests to verify functionality</li>
+          </ol>
+
+          <figure class="image-container">
+            <img src="img/sample-app.png" alt="Application running">
+            <figcaption>Your application is now running!</figcaption>
+          </figure>
+
+          <nav class="step-navigation" aria-label="Step navigation">
+            <button class="step-nav-button step-nav-prev" aria-label="Previous step">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <line x1="19" y1="12" x2="5" y2="12"/>
+                <polyline points="12 19 5 12 12 5"/>
+              </svg>
+              Previous
+            </button>
+            <button class="step-nav-button primary step-nav-next" aria-label="Next step">
+              Next
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <line x1="5" y1="12" x2="19" y2="12"/>
+                <polyline points="12 5 19 12 12 19"/>
+              </svg>
+            </button>
+          </nav>
+        </section>
+
+        <!-- Step 9: Add Unit Tests -->
+        <section id="step-9" class="step-section" aria-labelledby="step-9-title">
+          <header class="step-header">
+            <span class="step-number">Step 9 of 11</span>
+            <h1 id="step-9-title" class="step-title">Add Unit Tests</h1>
+            <p class="step-duration">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12 6 12 12 16 14"/>
+              </svg>
+              15 minutes
+            </p>
+          </header>
+
+          <p>Let's use Copilot to add comprehensive unit tests to our application.</p>
+
+          <h2>Generate Unit Tests</h2>
+          <p>Use the following prompt to have Copilot create unit tests:</p>
+          <pre><code>We want to add unit testing to this project.
+Please create unit tests for all the important functions in this application.
+Install necessary libraries to support this change.
+Then in the readme file, add explanation on how to run the unit tests.</code></pre>
+
+          <figure class="image-container">
+            <img src="img/generate-UT.png" alt="Copilot creating unit tests">
+            <figcaption>Copilot generates comprehensive unit tests</figcaption>
+          </figure>
+
+          <h2>Running Tests</h2>
+          <p>You can ask Copilot to run the tests directly from the Chat panel:</p>
+          <pre><code>Run the unit tests and show me the results.</code></pre>
+
+          <figure class="image-container">
+            <img src="img/test-exec.png" alt="Unit test results">
+            <figcaption>Unit test results in the terminal</figcaption>
+          </figure>
+
+          <div class="info-box tip">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="12" y1="16" x2="12" y2="12"/>
+              <line x1="12" y1="8" x2="12.01" y2="8"/>
+            </svg>
+            <div class="info-box-content">
+              <strong>Tip</strong>
+              <p>Copilot can automatically check test results and make adjustments if tests fail. It uses your custom instructions and architecture document to ensure consistency.</p>
+            </div>
+          </div>
+
+          <nav class="step-navigation" aria-label="Step navigation">
+            <button class="step-nav-button step-nav-prev" aria-label="Previous step">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <line x1="19" y1="12" x2="5" y2="12"/>
+                <polyline points="12 19 5 12 12 5"/>
+              </svg>
+              Previous
+            </button>
+            <button class="step-nav-button primary step-nav-next" aria-label="Next step">
+              Next
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <line x1="5" y1="12" x2="19" y2="12"/>
+                <polyline points="12 5 19 12 12 19"/>
+              </svg>
+            </button>
+          </nav>
+        </section>
+
+        <!-- Step 10: Add Documentation -->
+        <section id="step-10" class="step-section" aria-labelledby="step-10-title">
+          <header class="step-header">
+            <span class="step-number">Step 10 of 11</span>
+            <h1 id="step-10-title" class="step-title">Add Documentation</h1>
+            <p class="step-duration">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12 6 12 12 16 14"/>
+              </svg>
+              10 minutes
+            </p>
+          </header>
+
+          <p>Well-documented code is essential for maintainability. Let's use Copilot to generate comprehensive documentation.</p>
+
+          <h2>Generate Application Documentation</h2>
+          <p>Use this prompt to create detailed documentation:</p>
+          <pre><code>Create a documentation on how the current application works. Add a user flow chart and sequence diagram, using Mermaid format.</code></pre>
+
+          <figure class="image-container">
+            <img src="img/ide-doc2.png" alt="Generated documentation">
+            <figcaption>Copilot generates comprehensive documentation</figcaption>
+          </figure>
+
+          <figure class="image-container">
+            <img src="img/ide-doc.png" alt="Mermaid diagrams in documentation">
+            <figcaption>Documentation includes Mermaid diagrams for visual representation</figcaption>
+          </figure>
+
+          <nav class="step-navigation" aria-label="Step navigation">
+            <button class="step-nav-button step-nav-prev" aria-label="Previous step">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <line x1="19" y1="12" x2="5" y2="12"/>
+                <polyline points="12 19 5 12 12 5"/>
+              </svg>
+              Previous
+            </button>
+            <button class="step-nav-button primary step-nav-next" aria-label="Next step">
+              Next
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <line x1="5" y1="12" x2="19" y2="12"/>
+                <polyline points="12 5 19 12 12 19"/>
+              </svg>
+            </button>
+          </nav>
+        </section>
+
+        <!-- Step 11: Custom Agents (Optional) -->
+        <section id="step-11" class="step-section" aria-labelledby="step-11-title">
+          <header class="step-header">
+            <span class="step-number">Step 11 of 11 (Optional)</span>
+            <h1 id="step-11-title" class="step-title">Custom Agents</h1>
+            <p class="step-duration">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12 6 12 12 16 14"/>
+              </svg>
+              15 minutes
+            </p>
+          </header>
+
+          <p>Custom Agents allow you to create specialized AI assistants for specific tasks in your project. This is an optional but powerful feature to enhance your workflow.</p>
+
+          <h2>What are Custom Agents?</h2>
+          <p>Custom Agents are specialized AI assistants you can configure for specific tasks. They can be scoped to particular file types, coding patterns, or documentation tasks.</p>
+
+          <h2>Creating a Custom Agent</h2>
+          <p>You can create custom agents for specific tasks. For example, a "README creator" agent:</p>
+          <ol>
+            <li>Create a file: <code>.github/agents/readme-creator-agent.md</code></li>
+            <li>Add agent configuration:</li>
+          </ol>
+
+          <pre><code>---
+name: readme-creator
+description: Agent specializing in creating and improving README files
+---
+
+You are a documentation specialist focused on README files. Your scope is limited to README files or other related documentation files only - DO NOT modify or analyze code files.
+
+Focus on the following instructions:
+- Create and update README.md files with clear project descriptions
+- Structure README sections logically: overview, installation, usage, contributing
+- Write scannable content with proper headings and formatting
+- Add appropriate badges, links, and navigation elements</code></pre>
+
+          <h2>More Custom Agent Examples</h2>
+          <p>Here are some other useful custom agents you can create:</p>
+
+          <h3>Code Reviewer Agent</h3>
+          <pre><code>---
+name: code-reviewer
+description: Agent that reviews code for best practices and potential issues
+---
+
+You are a senior developer focused on code quality. Review code for:
+- Security vulnerabilities
+- Performance issues
+- Code style and consistency
+- Best practices for the language/framework</code></pre>
+
+          <h3>Test Writer Agent</h3>
+          <pre><code>---
+name: test-writer
+description: Agent specialized in writing unit and integration tests
+---
+
+You are a testing specialist. When asked to write tests:
+- Follow the existing test patterns in the project
+- Cover edge cases and error conditions
+- Use descriptive test names
+- Include both positive and negative test cases</code></pre>
+
+          <div class="info-box tip">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="12" y1="16" x2="12" y2="12"/>
+              <line x1="12" y1="8" x2="12.01" y2="8"/>
+            </svg>
+            <div class="info-box-content">
+              <strong>Tip</strong>
+              <p>Refer to the <a href="https://github.com/github/awesome-copilot/tree/main/agents" target="_blank" rel="noopener noreferrer">Awesome Copilot Repository</a> for more custom agent examples and best practices.</p>
+            </div>
+          </div>
+
+          <h2>🎉 Congratulations!</h2>
+          <p>You've completed the "Start Coding with AI" learning path! You've learned:</p>
+          <ul>
+            <li>Using specifications to develop an application</li>
+            <li>Code explanation and improvement</li>
+            <li>Utilizing agent functionality</li>
+            <li>Adding tests and documentation</li>
+            <li>Creating custom agents for specialized tasks</li>
+          </ul>
+
+          <h3>Next Steps</h3>
+          <ul>
+            <li>Try using Copilot in your own projects</li>
+            <li>Challenge more complex application development</li>
+            <li>Explore the <a href="pro-features.html">Copilot Pro Features</a> learning path</li>
+          </ul>
+
+          <nav class="step-navigation" aria-label="Step navigation">
+            <button class="step-nav-button step-nav-prev" aria-label="Previous step">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <line x1="19" y1="12" x2="5" y2="12"/>
+                <polyline points="12 19 5 12 12 5"/>
+              </svg>
+              Previous
+            </button>
+            <a href="pro-features.html" class="step-nav-button primary">
+              Continue to Pro Features
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <line x1="5" y1="12" x2="19" y2="12"/>
+                <polyline points="12 5 19 12 12 19"/>
+              </svg>
+            </a>
+          </nav>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- Mobile sidebar toggle button -->
+  <button id="sidebar-toggle" class="sidebar-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+      <line x1="3" y1="12" x2="21" y2="12"/>
+      <line x1="3" y1="6" x2="21" y2="6"/>
+      <line x1="3" y1="18" x2="21" y2="18"/>
+    </svg>
+  </button>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

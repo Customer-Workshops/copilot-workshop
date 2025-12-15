@@ -1,0 +1,25 @@
+{
+  "environment": "web",
+  "format": "html",
+  "prefix": "https://storage.googleapis.com",
+  "mainga": "UA-49880327-14",
+  "updated": "2025-11-14T15:51:46+07:00",
+  "id": "github-copilot-workshop-id",
+  "duration": 160,
+  "title": "GitHub Copilot Workshop",
+  "summary": "GitHub Copilot Workshop for Github Universe Recap 2025 Jakarta Indonesia",
+  "source": "workshop.md",
+  "theme": "",
+  "status": [
+    "published"
+  ],
+  "category": [
+    "ai",
+    "development"
+  ],
+  "tags": [
+    "web"
+  ],
+  "feedback": "https://example.com/feedback",
+  "url": "github-copilot-workshop-id"
+}

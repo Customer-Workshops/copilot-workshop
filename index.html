@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Learn how to use GitHub Copilot effectively with hands-on exercises. Choose your learning path: Start Coding with AI or explore Copilot Pro Features.">
+  <meta name="theme-color" content="#6C21D9">
+  <title>GitHub Copilot Workshop</title>
+  <link rel="stylesheet" href="github-copilot-workshop/css/styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', var(--font-family); }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="site-header" role="banner">
+    <div class="header-brand">
+      <svg class="header-logo" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+      </svg>
+      <a href="index.html" class="header-title">GitHub Copilot Workshop</a>
+    </div>
+    <nav class="header-nav" aria-label="Main navigation">
+      <a href="index.html" class="header-nav-link active">Home</a>
+      <a href="github-copilot-workshop/start-coding.html" class="header-nav-link">Start Coding with AI</a>
+      <a href="github-copilot-workshop/pro-features.html" class="header-nav-link">Copilot Pro Features</a>
+      <button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark mode">
+        <svg class="theme-toggle-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span class="theme-toggle-text">Dark</span>
+      </button>
+    </nav>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main-content" role="main">
+    <!-- Hero Section -->
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-content">
+        <img src="github-copilot-workshop/img/mona.png" alt="GitHub Copilot Logo" class="hero-logo">
+        <h1 id="hero-title" class="hero-title">GitHub Copilot Workshop</h1>
+        <p class="hero-subtitle">
+          Master AI-powered coding with GitHub Copilot. Learn how to leverage your AI pair programmer 
+          through hands-on exercises and real-world examples.
+        </p>
+      </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="section" aria-labelledby="about-title">
+      <div class="container">
+        <div class="section-header">
+          <h2 id="about-title" class="section-title">About the Workshop</h2>
+          <p class="section-subtitle">Everything you need to get started with GitHub Copilot</p>
+        </div>
+
+        <!-- Goals -->
+        <h3 id="goals-heading">Today's Goals</h3>
+        <ul class="goals-list" aria-labelledby="goals-heading">
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M22 11.08V12a10 10 0 11-5.93-9.14" stroke-linecap="round" stroke-linejoin="round"/>
+              <polyline points="22 4 12 14.01 9 11.01" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>Understand the various features of GitHub Copilot</span>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M22 11.08V12a10 10 0 11-5.93-9.14" stroke-linecap="round" stroke-linejoin="round"/>
+              <polyline points="22 4 12 14.01 9 11.01" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>Develop a complete application using agent mode</span>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M22 11.08V12a10 10 0 11-5.93-9.14" stroke-linecap="round" stroke-linejoin="round"/>
+              <polyline points="22 4 12 14.01 9 11.01" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>Learn how to use Copilot across the GitHub platform</span>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M22 11.08V12a10 10 0 11-5.93-9.14" stroke-linecap="round" stroke-linejoin="round"/>
+              <polyline points="22 4 12 14.01 9 11.01" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>Master advanced Copilot features for professional development</span>
+          </li>
+        </ul>
+
+        <!-- Prerequisites -->
+        <h3 id="prereq-heading">Prerequisites</h3>
+        <ul class="prerequisites-list" aria-labelledby="prereq-heading">
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+              <line x1="8" y1="21" x2="16" y2="21"/>
+              <line x1="12" y1="17" x2="12" y2="21"/>
+            </svg>
+            <span><strong>Visual Studio Code</strong> is installed on your machine</span>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+              <path d="M2 17l10 5 10-5"/>
+              <path d="M2 12l10 5 10-5"/>
+            </svg>
+            <span><strong>GitHub Copilot license</strong> is available and activated</span>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
+              <circle cx="12" cy="7" r="4"/>
+            </svg>
+            <span><strong>GitHub account</strong> is set up and ready to use</span>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Learning Paths Section -->
+    <section class="section" aria-labelledby="paths-title" style="background-color: var(--color-bg-secondary);">
+      <div class="container">
+        <div class="section-header">
+          <h2 id="paths-title" class="section-title">Choose Your Learning Path</h2>
+          <p class="section-subtitle">Select the path that best matches your learning goals</p>
+        </div>
+
+        <div class="path-cards">
+          <!-- Path 1: Start Coding with AI -->
+          <a href="github-copilot-workshop/start-coding.html" class="path-card" aria-labelledby="path1-title">
+            <span class="path-card-number">Path 1</span>
+            <h3 id="path1-title" class="path-card-title">Start Coding with AI</h3>
+            <p class="path-card-description">
+              Learn IDE-based Copilot features through hands-on exercises. Perfect for developers 
+              new to AI-assisted coding who want to master the fundamentals.
+            </p>
+            <ul class="path-card-topics">
+              <li>Project Setup with Codespaces</li>
+              <li>Code Completion &amp; Chat</li>
+              <li>Copilot Edit &amp; Agent Mode</li>
+              <li>End-to-End App Development</li>
+              <li>Unit Tests &amp; Documentation</li>
+            </ul>
+            <span class="path-card-action">
+              Start Learning
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <line x1="5" y1="12" x2="19" y2="12"/>
+                <polyline points="12 5 19 12 12 19"/>
+              </svg>
+            </span>
+          </a>
+
+          <!-- Path 2: Copilot Pro Features -->
+          <a href="github-copilot-workshop/pro-features.html" class="path-card" aria-labelledby="path2-title">
+            <span class="path-card-number">Path 2</span>
+            <h3 id="path2-title" class="path-card-title">Copilot Pro Features</h3>
+            <p class="path-card-description">
+              Explore advanced Copilot features for professional development workflows. 
+              Ideal for developers ready to leverage AI across the entire development lifecycle.
+            </p>
+            <ul class="path-card-topics">
+              <li>Create Repos with Coding Agent</li>
+              <li>Plan &amp; Design with Custom Agents</li>
+              <li>Copilot Instructions Setup</li>
+              <li>PR Generation &amp; Code Review</li>
+              <li>Agent Mission Control</li>
+            </ul>
+            <span class="path-card-action">
+              Start Learning
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <line x1="5" y1="12" x2="19" y2="12"/>
+                <polyline points="12 5 19 12 12 19"/>
+              </svg>
+            </span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Resources Section -->
+    <section class="section" aria-labelledby="resources-title">
+      <div class="container">
+        <div class="section-header">
+          <h2 id="resources-title" class="section-title">Additional Resources</h2>
+          <p class="section-subtitle">Continue your learning journey</p>
+        </div>
+
+        <div class="card-grid">
+          <div class="card">
+            <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/>
+              <line x1="16" y1="13" x2="8" y2="13"/>
+              <line x1="16" y1="17" x2="8" y2="17"/>
+              <polyline points="10 9 9 9 8 9"/>
+            </svg>
+            <h3 class="card-title">Documentation</h3>
+            <p class="card-description">Explore the official GitHub Copilot documentation for detailed guides and reference materials.</p>
+            <a href="https://docs.github.com/copilot" target="_blank" rel="noopener noreferrer" class="button button-secondary">
+              View Docs
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/>
+                <polyline points="15 3 21 3 21 9"/>
+                <line x1="10" y1="14" x2="21" y2="3"/>
+              </svg>
+            </a>
+          </div>
+
+          <div class="card">
+            <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+            </svg>
+            <h3 class="card-title">Best Practices</h3>
+            <p class="card-description">Learn tips and best practices for getting the most out of GitHub Copilot in your workflow.</p>
+            <a href="https://docs.github.com/copilot/using-github-copilot/best-practices-for-using-github-copilot" target="_blank" rel="noopener noreferrer" class="button button-secondary">
+              Learn More
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/>
+                <polyline points="15 3 21 3 21 9"/>
+                <line x1="10" y1="14" x2="21" y2="3"/>
+              </svg>
+            </a>
+          </div>
+
+          <div class="card">
+            <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/>
+              <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+              <line x1="12" y1="22.08" x2="12" y2="12"/>
+            </svg>
+            <h3 class="card-title">Awesome Copilot</h3>
+            <p class="card-description">Discover a curated collection of examples, tools, and community resources for Copilot.</p>
+            <a href="https://github.com/github/awesome-copilot" target="_blank" rel="noopener noreferrer" class="button button-secondary">
+              Explore
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/>
+                <polyline points="15 3 21 3 21 9"/>
+                <line x1="10" y1="14" x2="21" y2="3"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer" role="contentinfo">
+    <div class="container">
+      <p>
+        GitHub Copilot Workshop &bull; 
+        <a href="https://github.com" target="_blank" rel="noopener noreferrer">GitHub</a> &bull;
+        Built with ❤️ for developers
+      </p>
+    </div>
+  </footer>
+
+  <script src="github-copilot-workshop/js/main.js"></script>
+</body>
+</html>
