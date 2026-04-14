@@ -47,6 +47,17 @@ Explore advanced Copilot features for professional development workflows.
 6. Copilot Spaces
 7. Agent Mission Control
 
+### Path 3: Extended Copilot Capabilities
+
+Go beyond the IDE and explore the broader Copilot ecosystem — CLI, SDK, agent extensibility, and memory. Ideal for developers who have completed Path 1 or Path 2.
+
+**Topics Covered:**
+1. Copilot CLI
+2. Copilot SDK
+3. Agent Skills
+4. Sub-Agents
+5. Copilot Memory
+
 ## Prerequisites
 
 - **Visual Studio Code** installed on your machine
@@ -91,6 +102,7 @@ copilot-workshop/
 └── github-copilot-workshop/
     ├── start-coding.html           # Path 1: Start Coding with AI
     ├── pro-features.html           # Path 2: Copilot Pro Features
+    ├── extended-capabilities.html  # Path 3: Extended Copilot Capabilities
     ├── codelab.json                # Workshop metadata
     ├── css/
     │   └── styles.css              # Stylesheet

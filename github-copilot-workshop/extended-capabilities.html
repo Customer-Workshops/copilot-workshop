@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Explore the extended GitHub Copilot ecosystem including the CLI, SDK, agent extensibility, and memory features.">
+  <meta name="theme-color" content="#6C21D9">
+  <title>Extended Copilot Capabilities - GitHub Copilot Workshop</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', var(--font-family); }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="site-header" role="banner">
+    <div class="header-brand">
+      <svg class="header-logo" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+      </svg>
+      <a href="../index.html" class="header-title">GitHub Copilot Workshop</a>
+    </div>
+    <nav class="header-nav" aria-label="Main navigation">
+      <a href="../index.html" class="header-nav-link">Home</a>
+      <a href="start-coding.html" class="header-nav-link">Start Coding with AI</a>
+      <a href="pro-features.html" class="header-nav-link">Copilot Pro Features</a>
+      <a href="extended-capabilities.html" class="header-nav-link active">Extended Capabilities</a>
+      <button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark mode">
+        <svg class="theme-toggle-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span class="theme-toggle-text">Dark</span>
+      </button>
+    </nav>
+  </header>
+
+  <!-- Workshop Layout -->
+  <div class="workshop-layout">
+    <!-- Sidebar Navigation -->
+    <aside id="workshop-sidebar" class="workshop-sidebar" role="navigation" aria-label="Workshop steps">
+      <div class="sidebar-header">
+        <a href="../index.html" class="sidebar-back">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <line x1="19" y1="12" x2="5" y2="12"/>
+            <polyline points="12 19 5 12 12 5"/>
+          </svg>
+          Back to Home
+        </a>
+        <h2 class="sidebar-title">Extended Capabilities</h2>
+      </div>
+
+      <nav class="sidebar-nav">
+        <ol class="sidebar-nav-list">
+          <li class="sidebar-nav-item">
+            <a href="#step-1" class="sidebar-nav-link active">
+              <span class="sidebar-nav-number">1</span>
+              <span class="sidebar-nav-text">Copilot CLI</span>
+            </a>
+          </li>
+          <li class="sidebar-nav-item">
+            <a href="#step-2" class="sidebar-nav-link">
+              <span class="sidebar-nav-number">2</span>
+              <span class="sidebar-nav-text">Copilot SDK</span>
+            </a>
+          </li>
+          <li class="sidebar-nav-item">
+            <a href="#step-3" class="sidebar-nav-link">
+              <span class="sidebar-nav-number">3</span>
+              <span class="sidebar-nav-text">Agent Skills</span>
+            </a>
+          </li>
+          <li class="sidebar-nav-item">
+            <a href="#step-4" class="sidebar-nav-link">
+              <span class="sidebar-nav-number">4</span>
+              <span class="sidebar-nav-text">Sub-Agents</span>
+            </a>
+          </li>
+          <li class="sidebar-nav-item">
+            <a href="#step-5" class="sidebar-nav-link">
+              <span class="sidebar-nav-number">5</span>
+              <span class="sidebar-nav-text">Copilot Memory</span>
+            </a>
+          </li>
+        </ol>
+      </nav>
+
+      <div class="progress-container">
+        <div class="progress-label">
+          <span>Progress</span>
+          <span><span class="progress-current">1</span> / <span class="progress-total">5</span></span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" style="width: 20%;"></div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Sidebar overlay for mobile -->
+    <div id="sidebar-overlay" class="sidebar-overlay" aria-hidden="true"></div>
+
+    <!-- Main Content -->
+    <main class="workshop-content" role="main">
+      <div class="workshop-content-inner">
+
+        <!-- Step 1: Copilot CLI -->
+        <section id="step-1" class="step-section active" aria-labelledby="step-1-title">
+          <header class="step-header">
+            <span class="step-number">Step 1 of 5</span>
+            <h1 id="step-1-title" class="step-title">Copilot CLI</h1>
+            <p class="step-duration">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12 6 12 12 16 14"/>
+              </svg>
+              15 minutes
+            </p>
+          </header>
+
+          <p>GitHub Copilot CLI brings AI-powered assistance directly to your terminal, helping you craft shell commands, explain what commands do, and navigate your development environment more efficiently.</p>
+
+          <h2>What is Copilot CLI?</h2>
+          <p>Copilot CLI is a command-line extension that lets you ask Copilot questions in plain language directly from your terminal. It supports two key sub-commands:</p>
+          <ul>
+            <li><code>gh copilot suggest</code> — Suggest a shell command for a given task</li>
+            <li><code>gh copilot explain</code> — Explain what a shell command does</li>
+          </ul>
+
+          <h2>Installation</h2>
+          <p>Copilot CLI is available as a GitHub CLI extension. To install it:</p>
+          <ol>
+            <li>Ensure the <a href="https://cli.github.com/" target="_blank" rel="noopener noreferrer">GitHub CLI</a> (<code>gh</code>) is installed and authenticated</li>
+            <li>Install the extension:
+              <pre><code>gh extension install github/gh-copilot</code></pre>
+            </li>
+            <li>Verify the installation:
+              <pre><code>gh copilot --version</code></pre>
+            </li>
+          </ol>
+
+          <h2>Suggesting Commands</h2>
+          <p>Use <code>gh copilot suggest</code> to get a shell command for a plain-language description of a task:</p>
+          <pre><code>gh copilot suggest "list all running Docker containers and their port mappings"</code></pre>
+          <p>Copilot will suggest a command and ask whether you want to copy it to your clipboard, run it directly, or revise the request.</p>
+
+          <h2>Explaining Commands</h2>
+          <p>Use <code>gh copilot explain</code> to understand what an unfamiliar command does:</p>
+          <pre><code>gh copilot explain "git rebase -i HEAD~3"</code></pre>
+          <p>Copilot will provide a clear, plain-language explanation of the command and its flags.</p>
+
+          <div class="info-box note">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="12" y1="16" x2="12" y2="12"/>
+              <line x1="12" y1="8" x2="12.01" y2="8"/>
+            </svg>
+            <div class="info-box-content">
+              <strong>Tip</strong>
+              <p>You can pipe command output to Copilot explain for contextual help: <code>cat error.log | gh copilot explain</code></p>
+            </div>
+          </div>
+
+          <h2>Hands-on Exercise</h2>
+          <ol>
+            <li>Ask Copilot CLI to suggest a command to find all files larger than 100 MB in your home directory</li>
+            <li>Ask Copilot CLI to explain the output of <code>ps aux | grep node</code></li>
+            <li>Use <code>gh copilot suggest</code> to generate a <code>git</code> command that shows a compact graph of the last 10 commits across all branches</li>
+          </ol>
+
+          <nav class="step-navigation" aria-label="Step navigation">
+            <button class="step-nav-button step-nav-prev" disabled aria-label="Previous step">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <line x1="19" y1="12" x2="5" y2="12"/>
+                <polyline points="12 19 5 12 12 5"/>
+              </svg>
+              Previous
+            </button>
+            <button class="step-nav-button primary step-nav-next" aria-label="Next step">
+              Next
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <line x1="5" y1="12" x2="19" y2="12"/>
+                <polyline points="12 5 19 12 12 19"/>
+              </svg>
+            </button>
+          </nav>
+        </section>
+
+        <!-- Step 2: Copilot SDK -->
+        <section id="step-2" class="step-section" aria-labelledby="step-2-title">
+          <header class="step-header">
+            <span class="step-number">Step 2 of 5</span>
+            <h1 id="step-2-title" class="step-title">Copilot SDK</h1>
+            <p class="step-duration">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12 6 12 12 16 14"/>
+              </svg>
+              20 minutes
+            </p>
+          </header>
+
+          <p>The GitHub Copilot SDK allows you to programmatically integrate Copilot's AI capabilities into your own applications and tools, enabling you to build custom AI-powered experiences.</p>
+
+          <h2>What is the Copilot SDK?</h2>
+          <p>The Copilot SDK (also referred to as the Copilot Extensions API) provides the building blocks to create GitHub Apps that communicate with Copilot. These extensions appear as agents within Copilot Chat and can respond to user messages with context-aware AI output.</p>
+
+          <h2>Key Concepts</h2>
+          <ul>
+            <li><strong>Copilot Extensions</strong> — GitHub Apps that integrate with Copilot Chat via a defined API contract</li>
+            <li><strong>Agent endpoint</strong> — An HTTPS endpoint your app exposes that Copilot calls when a user invokes your agent</li>
+            <li><strong>Server-Sent Events (SSE)</strong> — The streaming protocol used to send responses back to Copilot Chat in real time</li>
+            <li><strong>Payload verification</strong> — Signature verification to ensure requests originate from GitHub</li>
+          </ul>
+
+          <h2>Getting Started</h2>
+          <ol>
+            <li>Create a new GitHub App in your organization or personal account settings</li>
+            <li>Enable <strong>Copilot</strong> under the app's permissions and set an agent URL</li>
+            <li>Implement the agent endpoint in your preferred language:
+              <pre><code># Example: minimal Python agent using Flask
+from flask import Flask, request, Response
+import json
+
+app = Flask(__name__)
+
+@app.route("/agent", methods=["POST"])
+def agent():
+    def generate():
+        yield "data: " + json.dumps({
+            "choices": [{
+                "delta": {"content": "Hello from my custom Copilot agent!"},
+                "finish_reason": None
+            }]
+        }) + "\n\n"
+        yield "data: " + json.dumps({
+            "choices": [{"delta": {}, "finish_reason": "stop"}]
+        }) + "\n\n"
+    return Response(generate(), mimetype="text/event-stream")
+
+if __name__ == "__main__":
+    app.run(port=3000)</code></pre>
+            </li>
+            <li>Install your GitHub App and invoke your agent in Copilot Chat with <code>@your-agent-name</code></li>
+          </ol>
+
+          <h2>SDK Libraries</h2>
+          <p>GitHub provides official SDK helpers to simplify agent development:</p>
+          <ul>
+            <li><a href="https://github.com/github/github-mcp-server" target="_blank" rel="noopener noreferrer">github-mcp-server</a> — Reference implementation using the Model Context Protocol (GitHub repository)</li>
+            <li><code>@github/copilot-extensions</code> — Node.js SDK for building Copilot agents</li>
+          </ul>
+
+          <div class="info-box note">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="12" y1="16" x2="12" y2="12"/>
+              <line x1="12" y1="8" x2="12.01" y2="8"/>
+            </svg>
+            <div class="info-box-content">
+              <strong>Note</strong>
+              <p>Your agent endpoint must be publicly reachable over HTTPS. During development, tools like <a href="https://ngrok.com/" target="_blank" rel="noopener noreferrer">ngrok</a> can expose a local server for testing.</p>
+            </div>
+          </div>
+
+          <h2>Hands-on Exercise</h2>
+          <ol>
+            <li>Create a minimal agent endpoint that responds with a greeting when invoked</li>
+            <li>Register it as a GitHub App with Copilot permissions and test it in Copilot Chat</li>
+            <li>Extend the agent to echo the user's message back with the current timestamp</li>
+          </ol>
+
+          <nav class="step-navigation" aria-label="Step navigation">
+            <button class="step-nav-button step-nav-prev" aria-label="Previous step">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <line x1="19" y1="12" x2="5" y2="12"/>
+                <polyline points="12 19 5 12 12 5"/>
+              </svg>
+              Previous
+            </button>
+            <button class="step-nav-button primary step-nav-next" aria-label="Next step">
+              Next
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <line x1="5" y1="12" x2="19" y2="12"/>
+                <polyline points="12 5 19 12 12 19"/>
+              </svg>
+            </button>
+          </nav>
+        </section>
+
+        <!-- Step 3: Agent Skills -->
+        <section id="step-3" class="step-section" aria-labelledby="step-3-title">
+          <header class="step-header">
+            <span class="step-number">Step 3 of 5</span>
+            <h1 id="step-3-title" class="step-title">Agent Skills</h1>
+            <p class="step-duration">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12 6 12 12 16 14"/>
+              </svg>
+              20 minutes
+            </p>
+          </header>
+
+          <p>Agent Skills allow you to extend Copilot agents with callable functions — similar to tool use in modern AI models — enabling agents to take actions, retrieve data, and interact with external systems.</p>
+
+          <h2>What are Agent Skills?</h2>
+          <p>Skills (also called tools or functions) are discrete capabilities you expose to a Copilot agent. When a user asks the agent to do something, the agent can invoke a skill to fetch data or perform an action and incorporate the result into its response.</p>
+
+          <h2>Defining a Skill</h2>
+          <p>Skills are defined as JSON function schemas that describe the skill's name, description, and parameters:</p>
+          <pre><code>{
+  "type": "function",
+  "function": {
+    "name": "get_weather",
+    "description": "Get the current weather for a given city",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "city": {
+          "type": "string",
+          "description": "The name of the city"
+        }
+      },
+      "required": ["city"]
+    }
+  }
+}</code></pre>
+
+          <h2>Implementing a Skill Handler</h2>
+          <p>Your agent endpoint receives a function call request from Copilot and must return the result:</p>
+          <pre><code># Example skill handler (Python)
+def handle_skill(function_name, arguments):
+    if function_name == "get_weather":
+        city = arguments.get("city", "Unknown")
+        # Call a weather API here
+        return {"temperature": "22°C", "condition": "Sunny", "city": city}
+    return {"error": "Unknown skill"}</code></pre>
+
+          <h2>Skill Design Best Practices</h2>
+          <ul>
+            <li>Keep each skill focused on a single, well-defined task</li>
+            <li>Write clear, descriptive skill descriptions — the model uses them to decide when to call the skill</li>
+            <li>Return structured data (JSON) so the agent can summarize it naturally</li>
+            <li>Handle errors gracefully and return informative error messages</li>
+            <li>Validate and sanitize all inputs before using them in external calls</li>
+          </ul>
+
+          <div class="info-box note">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="12" y1="16" x2="12" y2="12"/>
+              <line x1="12" y1="8" x2="12.01" y2="8"/>
+            </svg>
+            <div class="info-box-content">
+              <strong>Tip</strong>
+              <p>Skills work best when they are composable. A well-designed set of small skills can be combined by the agent to answer complex, multi-step questions.</p>
+            </div>
+          </div>
+
+          <h2>Hands-on Exercise</h2>
+          <ol>
+            <li>Define a <code>search_docs</code> skill that accepts a <code>query</code> parameter</li>
+            <li>Implement a handler that searches a static list of documentation topics and returns matching results</li>
+            <li>Register the skill with your agent and test it by asking your agent a question that triggers the skill</li>
+          </ol>
+
+          <nav class="step-navigation" aria-label="Step navigation">
+            <button class="step-nav-button step-nav-prev" aria-label="Previous step">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <line x1="19" y1="12" x2="5" y2="12"/>
+                <polyline points="12 19 5 12 12 5"/>
+              </svg>
+              Previous
+            </button>
+            <button class="step-nav-button primary step-nav-next" aria-label="Next step">
+              Next
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <line x1="5" y1="12" x2="19" y2="12"/>
+                <polyline points="12 5 19 12 12 19"/>
+              </svg>
+            </button>
+          </nav>
+        </section>
+
+        <!-- Step 4: Sub-Agents -->
+        <section id="step-4" class="step-section" aria-labelledby="step-4-title">
+          <header class="step-header">
+            <span class="step-number">Step 4 of 5</span>
+            <h1 id="step-4-title" class="step-title">Sub-Agents</h1>
+            <p class="step-duration">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12 6 12 12 16 14"/>
+              </svg>
+              20 minutes
+            </p>
+          </header>
+
+          <p>Sub-agents allow a primary Copilot agent to delegate tasks to specialized agents, enabling modular, multi-step workflows that combine the strengths of multiple AI agents.</p>
+
+          <h2>What are Sub-Agents?</h2>
+          <p>A sub-agent is an agent that is invoked programmatically by a parent agent rather than directly by a user. The parent agent orchestrates the workflow, deciding which sub-agent to call and how to combine results into a final response.</p>
+
+          <h2>Architecture Overview</h2>
+          <p>A typical sub-agent architecture:</p>
+          <ol>
+            <li><strong>Orchestrator agent</strong> — Receives the user's request and decomposes it into sub-tasks</li>
+            <li><strong>Specialist sub-agents</strong> — Each handles a specific domain (e.g., code generation, data retrieval, content summarization)</li>
+            <li><strong>Aggregation</strong> — The orchestrator combines sub-agent results and returns a unified response</li>
+          </ol>
+
+          <h2>Implementing a Sub-Agent Workflow</h2>
+          <pre><code># Example: orchestrator calling two sub-agents
+def orchestrate(user_message):
+    # Step 1: delegate research to a retrieval sub-agent
+    docs = call_sub_agent("retrieval-agent", user_message)
+
+    # Step 2: delegate code generation to a coding sub-agent
+    code = call_sub_agent("coding-agent", {
+        "task": user_message,
+        "context": docs
+    })
+
+    return f"Here are the relevant docs:\n{docs}\n\nGenerated code:\n{code}"
+
+def call_sub_agent(agent_name, payload):
+    # Make an HTTP request to the sub-agent endpoint
+    import requests
+    response = requests.post(f"https://agents.example.com/{agent_name}", json=payload)
+    return response.json().get("result", "")</code></pre>
+
+          <h2>When to Use Sub-Agents</h2>
+          <ul>
+            <li>When a task is too complex for a single agent to handle well</li>
+            <li>When different steps of a workflow require specialized knowledge or tools</li>
+            <li>When you want to reuse existing agents as building blocks</li>
+            <li>When parallel execution of independent tasks can reduce latency</li>
+          </ul>
+
+          <div class="info-box note">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="12" y1="16" x2="12" y2="12"/>
+              <line x1="12" y1="8" x2="12.01" y2="8"/>
+            </svg>
+            <div class="info-box-content">
+              <strong>Note</strong>
+              <p>Keep sub-agent interfaces simple and well-documented. An orchestrator is only as reliable as its sub-agents — ensure each sub-agent returns consistent, predictable output.</p>
+            </div>
+          </div>
+
+          <h2>Hands-on Exercise</h2>
+          <ol>
+            <li>Create a <code>summarizer</code> sub-agent that takes a block of text and returns a bullet-point summary</li>
+            <li>Create an orchestrator agent that fetches content from a URL (using a skill) and then calls the summarizer</li>
+            <li>Test the workflow end-to-end by asking your orchestrator agent to summarize the GitHub Copilot documentation page</li>
+          </ol>
+
+          <nav class="step-navigation" aria-label="Step navigation">
+            <button class="step-nav-button step-nav-prev" aria-label="Previous step">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <line x1="19" y1="12" x2="5" y2="12"/>
+                <polyline points="12 19 5 12 12 5"/>
+              </svg>
+              Previous
+            </button>
+            <button class="step-nav-button primary step-nav-next" aria-label="Next step">
+              Next
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <line x1="5" y1="12" x2="19" y2="12"/>
+                <polyline points="12 5 19 12 12 19"/>
+              </svg>
+            </button>
+          </nav>
+        </section>
+
+        <!-- Step 5: Copilot Memory -->
+        <section id="step-5" class="step-section" aria-labelledby="step-5-title">
+          <header class="step-header">
+            <span class="step-number">Step 5 of 5</span>
+            <h1 id="step-5-title" class="step-title">Copilot Memory</h1>
+            <p class="step-duration">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12 6 12 12 16 14"/>
+              </svg>
+              15 minutes
+            </p>
+          </header>
+
+          <p>Copilot Memory enables agents to persist and retrieve information across conversations, allowing for more personalized, context-aware interactions over time.</p>
+
+          <h2>What is Copilot Memory?</h2>
+          <p>By default, Copilot agents are stateless — each conversation starts fresh. Memory adds a persistence layer that lets agents store facts, preferences, and context that can be recalled in future sessions.</p>
+
+          <h2>Types of Memory</h2>
+          <ul>
+            <li><strong>Short-term memory</strong> — Context maintained within a single conversation (automatically handled via the conversation window)</li>
+            <li><strong>Long-term memory</strong> — Persisted facts stored in an external store (database, vector store, etc.) and retrieved on demand</li>
+            <li><strong>Episodic memory</strong> — Summaries of past conversations stored and retrieved to inform future interactions</li>
+          </ul>
+
+          <h2>Implementing Long-term Memory</h2>
+          <p>A common approach uses a vector database to store and semantically search memories:</p>
+          <pre><code># Example: storing and retrieving memories (Python)
+from openai import OpenAI
+
+client = OpenAI()
+
+def store_memory(text, memory_store):
+    embedding = client.embeddings.create(
+        model="text-embedding-3-small",
+        input=text
+    ).data[0].embedding
+    memory_store.append({"text": text, "embedding": embedding})
+
+def retrieve_memory(query, memory_store, top_k=3):
+    import numpy as np
+    query_embedding = client.embeddings.create(
+        model="text-embedding-3-small",
+        input=query
+    ).data[0].embedding
+    scores = [
+        np.dot(query_embedding, mem["embedding"])
+        for mem in memory_store
+    ]
+    top_indices = sorted(range(len(scores)), key=lambda i: scores[i], reverse=True)[:top_k]
+    return [memory_store[i]["text"] for i in top_indices]</code></pre>
+
+          <h2>Memory in Copilot Agents</h2>
+          <p>To integrate memory into a Copilot agent:</p>
+          <ol>
+            <li>At the start of each conversation, retrieve relevant memories based on the user's message</li>
+            <li>Inject the retrieved memories into the system prompt as context</li>
+            <li>At the end of the conversation, extract and store key facts from the exchange</li>
+          </ol>
+
+          <div class="info-box note">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="12" y1="16" x2="12" y2="12"/>
+              <line x1="12" y1="8" x2="12.01" y2="8"/>
+            </svg>
+            <div class="info-box-content">
+              <strong>Privacy Note</strong>
+              <p>Always be transparent with users about what information is being stored and provide a way for them to review or delete their stored memories.</p>
+            </div>
+          </div>
+
+          <h2>Hands-on Exercise</h2>
+          <ol>
+            <li>Build a simple in-memory store for your agent using a Python list or dictionary</li>
+            <li>Add a <code>remember</code> skill that stores a key-value fact provided by the user</li>
+            <li>Add a <code>recall</code> skill that retrieves stored facts and inject them into the agent's response</li>
+          </ol>
+
+          <h3>What's Next?</h3>
+          <ul>
+            <li>Explore <a href="https://docs.github.com/copilot/building-copilot-extensions" target="_blank" rel="noopener noreferrer">Building Copilot Extensions</a> documentation</li>
+            <li>Review the <a href="https://github.com/github/github-mcp-server" target="_blank" rel="noopener noreferrer">GitHub MCP Server</a> as a reference implementation</li>
+            <li>Experiment with combining CLI, SDK, skills, sub-agents, and memory in a single end-to-end project</li>
+          </ul>
+
+          <h3>Resources</h3>
+          <ul>
+            <li><a href="https://docs.github.com/copilot" target="_blank" rel="noopener noreferrer">GitHub Copilot Documentation</a></li>
+            <li><a href="https://docs.github.com/copilot/building-copilot-extensions" target="_blank" rel="noopener noreferrer">Building Copilot Extensions</a></li>
+            <li><a href="https://cli.github.com/manual/gh_copilot" target="_blank" rel="noopener noreferrer">GitHub Copilot CLI Reference</a></li>
+            <li><a href="https://github.com/github/awesome-copilot" target="_blank" rel="noopener noreferrer">Awesome Copilot</a></li>
+          </ul>
+
+          <nav class="step-navigation" aria-label="Step navigation">
+            <button class="step-nav-button step-nav-prev" aria-label="Previous step">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <line x1="19" y1="12" x2="5" y2="12"/>
+                <polyline points="12 19 5 12 12 5"/>
+              </svg>
+              Previous
+            </button>
+            <a href="../index.html" class="step-nav-button primary">
+              Back to Home
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+                <polyline points="9 22 9 12 15 12 15 22"/>
+              </svg>
+            </a>
+          </nav>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- Mobile sidebar toggle button -->
+  <button id="sidebar-toggle" class="sidebar-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+      <line x1="3" y1="12" x2="21" y2="12"/>
+      <line x1="3" y1="6" x2="21" y2="6"/>
+      <line x1="3" y1="18" x2="21" y2="18"/>
+    </svg>
+  </button>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
