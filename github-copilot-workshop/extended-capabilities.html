@@ -303,49 +303,81 @@ if __name__ == "__main__":
             </p>
           </header>
 
-          <p>Agent Skills allow you to extend Copilot agents with callable functions — similar to tool use in modern AI models — enabling agents to take actions, retrieve data, and interact with external systems.</p>
+          <p>Agent Skills in VS Code Copilot Chat allow you to define custom, reusable behaviors that guide how Copilot responds to specific types of requests. Skills are defined using markdown files that Copilot discovers and invokes automatically based on the context of your conversation.</p>
 
           <h2>What are Agent Skills?</h2>
-          <p>Skills (also called tools or functions) are discrete capabilities you expose to a Copilot agent. When a user asks the agent to do something, the agent can invoke a skill to fetch data or perform an action and incorporate the result into its response.</p>
+          <p>Skills are instructions stored in <code>.SKILL.md</code> files that tell Copilot how to handle specific tasks or workflows. When you ask Copilot a question, it can detect which skills are relevant and use them to provide more tailored, domain-specific responses.</p>
 
-          <h2>Defining a Skill</h2>
-          <p>Skills are defined as JSON function schemas that describe the skill's name, description, and parameters:</p>
-          <pre><code>{
-  "type": "function",
-  "function": {
-    "name": "get_weather",
-    "description": "Get the current weather for a given city",
-    "parameters": {
-      "type": "object",
-      "properties": {
-        "city": {
-          "type": "string",
-          "description": "The name of the city"
-        }
-      },
-      "required": ["city"]
-    }
-  }
-}</code></pre>
-
-          <h2>Implementing a Skill Handler</h2>
-          <p>Your agent endpoint receives a function call request from Copilot and must return the result:</p>
-          <pre><code># Example skill handler (Python)
-def handle_skill(function_name, arguments):
-    if function_name == "get_weather":
-        city = arguments.get("city", "Unknown")
-        # Call a weather API here
-        return {"temperature": "22°C", "condition": "Sunny", "city": city}
-    return {"error": "Unknown skill"}</code></pre>
-
-          <h2>Skill Design Best Practices</h2>
+          <p>Think of skills as specialized tools in Copilot's toolkit — each one teaches Copilot a specific capability, such as:</p>
           <ul>
-            <li>Keep each skill focused on a single, well-defined task</li>
-            <li>Write clear, descriptive skill descriptions — the model uses them to decide when to call the skill</li>
-            <li>Return structured data (JSON) so the agent can summarize it naturally</li>
-            <li>Handle errors gracefully and return informative error messages</li>
-            <li>Validate and sanitize all inputs before using them in external calls</li>
+            <li>Writing unit tests following your team's testing conventions</li>
+            <li>Reviewing pull requests with specific criteria in mind</li>
+            <li>Generating documentation in a particular format</li>
+            <li>Refactoring code according to established patterns</li>
+            <li>Creating boilerplate code for common scenarios</li>
           </ul>
+
+          <h2>How Copilot Discovers Skills</h2>
+          <p>Copilot looks for skill files in specific locations within your project:</p>
+          <ul>
+            <li><code>.github/copilot/skills/</code> — Repository-level skills shared by all contributors</li>
+            <li><code>.vscode/copilot/skills/</code> — Project-specific skills (alternative location)</li>
+          </ul>
+
+          <p>Skills are automatically loaded when you open a workspace, and Copilot will invoke them based on the conversation context and the skill's <code>applyTo</code> patterns.</p>
+
+          <h2>Creating Your First Skill</h2>
+          <p>Let's create a skill for writing unit tests. Create a file named <code>write-tests.SKILL.md</code> in your <code>.github/copilot/skills/</code> directory:</p>
+          <pre><code>---
+name: write-tests
+description: Write comprehensive unit tests following best practices
+applyTo:
+  - "**/*.test.js"
+  - "**/*.test.ts"
+  - "**/*.spec.js"
+  - "**/*.spec.ts"
+---
+
+# Writing Unit Tests
+
+When writing unit tests:
+
+1. **Naming Convention**: Use descriptive test names that explain what is being tested and the expected outcome
+   - Format: `it('should [expected behavior] when [condition]', ...)`
+
+2. **AAA Pattern**: Structure tests using Arrange, Act, Assert
+   - Arrange: Set up test data and dependencies
+   - Act: Execute the code being tested
+   - Assert: Verify the expected outcome
+
+3. **Coverage**: Write tests for:
+   - Happy path scenarios
+   - Edge cases and boundary conditions
+   - Error handling and exceptions
+
+4. **Mocking**: Mock external dependencies to keep tests isolated and fast
+
+5. **Assertions**: Use specific, clear assertions that make test failures easy to diagnose
+
+## Example Test Structure
+
+```javascript
+describe('UserService', () => {
+  it('should create a new user when valid data is provided', async () => {
+    // Arrange
+    const userData = { name: 'John Doe', email: 'john@example.com' };
+    const mockDb = { save: jest.fn().mockResolvedValue(userData) };
+    const service = new UserService(mockDb);
+
+    // Act
+    const result = await service.createUser(userData);
+
+    // Assert
+    expect(result).toEqual(userData);
+    expect(mockDb.save).toHaveBeenCalledWith(userData);
+  });
+});
+```</code></pre>
 
           <div class="info-box note">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
@@ -355,16 +387,150 @@ def handle_skill(function_name, arguments):
             </svg>
             <div class="info-box-content">
               <strong>Tip</strong>
-              <p>Skills work best when they are composable. A well-designed set of small skills can be combined by the agent to answer complex, multi-step questions.</p>
+              <p>The front matter (between <code>---</code> lines) defines metadata about the skill, including when it should be applied. The content provides instructions that guide Copilot's behavior.</p>
             </div>
           </div>
 
-          <h2>Hands-on Exercise</h2>
+          <h2>Scoping Skills with applyTo Patterns</h2>
+          <p>The <code>applyTo</code> field accepts glob patterns that specify which files or contexts should trigger the skill:</p>
+          <pre><code>---
+applyTo:
+  - "src/**/*.tsx"        # React/TypeScript files in src
+  - "tests/**/*"          # All files in tests directory
+  - "*.md"                # Markdown files in root
+  - "!node_modules/**"    # Exclude node_modules
+---</code></pre>
+
+          <p>When you're working with a file that matches these patterns, Copilot will automatically consider this skill when generating responses.</p>
+
+          <h2>Skill Best Practices</h2>
+          <ul>
+            <li><strong>Be specific</strong> — Provide concrete examples and clear guidelines rather than vague instructions</li>
+            <li><strong>Keep it focused</strong> — Each skill should address one specific task or workflow</li>
+            <li><strong>Use code examples</strong> — Show Copilot the exact patterns and style you expect</li>
+            <li><strong>Scope appropriately</strong> — Use <code>applyTo</code> patterns to ensure skills are invoked at the right time</li>
+            <li><strong>Document conventions</strong> — Include your team's specific coding standards and patterns</li>
+            <li><strong>Version control</strong> — Check skills into your repository so the whole team benefits</li>
+          </ul>
+
+          <h2>Exercise 1: Create a PR Review Skill</h2>
+          <p>Create a skill that guides Copilot to review pull requests with specific criteria:</p>
           <ol>
-            <li>Define a <code>search_docs</code> skill that accepts a <code>query</code> parameter</li>
-            <li>Implement a handler that searches a static list of documentation topics and returns matching results</li>
-            <li>Register the skill with your agent and test it by asking your agent a question that triggers the skill</li>
+            <li>Create <code>.github/copilot/skills/pr-review.SKILL.md</code></li>
+            <li>Define criteria such as:
+              <ul>
+                <li>Check for test coverage</li>
+                <li>Verify documentation is updated</li>
+                <li>Look for security issues</li>
+                <li>Ensure error handling is present</li>
+              </ul>
+            </li>
+            <li>Use <code>applyTo: ["*.md"]</code> so it activates when viewing PR descriptions</li>
+            <li>Test by asking Copilot to review a pull request</li>
           </ol>
+
+          <h2>Exercise 2: Create a Documentation Skill</h2>
+          <p>Create a skill for generating API documentation in a specific format:</p>
+          <ol>
+            <li>Create <code>.github/copilot/skills/api-docs.SKILL.md</code></li>
+            <li>Specify a documentation template that includes:
+              <ul>
+                <li>Function signature</li>
+                <li>Description of purpose</li>
+                <li>Parameter descriptions with types</li>
+                <li>Return value description</li>
+                <li>Usage examples</li>
+                <li>Error cases</li>
+              </ul>
+            </li>
+            <li>Scope to your API files with appropriate <code>applyTo</code> patterns</li>
+            <li>Test by asking Copilot to document a function in your codebase</li>
+          </ol>
+
+          <h2>Exercise 3: Test Your Skills</h2>
+          <p>Put your skills to work in real scenarios:</p>
+          <ol>
+            <li>Open a test file that matches your unit test skill's <code>applyTo</code> pattern</li>
+            <li>Ask Copilot: "Write tests for the UserService class"</li>
+            <li>Observe how Copilot applies your skill's guidelines</li>
+            <li>Refine the skill based on the results — add more examples or clarify instructions</li>
+            <li>Try the same prompt without the skill to see the difference</li>
+          </ol>
+
+          <div class="info-box tip">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M12 8v4m0 4h.01"/>
+            </svg>
+            <div class="info-box-content">
+              <strong>Pro Tip</strong>
+              <p>You can see which skills Copilot is using by checking the VS Code Copilot Chat panel. Skills that are active for the current context will be indicated in the response.</p>
+            </div>
+          </div>
+
+          <h2>When to Use Skills vs. Instructions vs. Prompts</h2>
+          <p>Understanding when to use each customization approach:</p>
+
+          <h3>Use Skills when:</h3>
+          <ul>
+            <li>You want reusable, invokable behaviors for specific tasks</li>
+            <li>The guidance applies to specific file types or patterns</li>
+            <li>You need Copilot to automatically adapt based on context</li>
+            <li>You're documenting repeatable workflows (testing, documentation, review)</li>
+          </ul>
+
+          <h3>Use Instructions when:</h3>
+          <ul>
+            <li>You want universal guidelines that apply to all Copilot interactions</li>
+            <li>You're setting coding standards, style preferences, or constraints</li>
+            <li>The guidance is project-wide rather than task-specific</li>
+          </ul>
+
+          <h3>Use Prompt Files when:</h3>
+          <ul>
+            <li>You have complex, multi-step prompts you use frequently</li>
+            <li>You want to create custom slash commands for common requests</li>
+            <li>You need parameterized prompts with variables</li>
+          </ul>
+
+          <div class="info-box warning">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+              <line x1="12" y1="9" x2="12" y2="13"/>
+              <line x1="12" y1="17" x2="12.01" y2="17"/>
+            </svg>
+            <div class="info-box-content">
+              <strong>Prerequisites</strong>
+              <p>Agent Skills require VS Code with the GitHub Copilot Chat extension. Make sure you have the latest version installed for the best experience.</p>
+            </div>
+          </div>
+
+          <h2>Challenge: Create a Real-World Skill</h2>
+          <p>Design and implement a skill for an actual workflow in your team's project:</p>
+          <ol>
+            <li>Identify a repetitive task your team performs regularly</li>
+            <li>Document the conventions, patterns, and standards for that task</li>
+            <li>Create a skill file with clear instructions and examples</li>
+            <li>Define appropriate <code>applyTo</code> patterns to scope the skill</li>
+            <li>Share it with your team and gather feedback</li>
+            <li>Iterate based on how well Copilot follows the skill in practice</li>
+          </ol>
+
+          <p>Some ideas to get started:</p>
+          <ul>
+            <li>Database migration file creation with your team's naming conventions</li>
+            <li>Component scaffolding following your framework's patterns</li>
+            <li>Error handling implementation with your logging standards</li>
+            <li>Security review checklist for authentication/authorization code</li>
+            <li>Performance optimization guidelines for database queries</li>
+          </ul>
+
+          <h2>Additional Resources</h2>
+          <ul>
+            <li><a href="https://docs.github.com/copilot/customizing-copilot/creating-custom-instructions-for-github-copilot" target="_blank" rel="noopener noreferrer">GitHub Copilot Customization Documentation</a></li>
+            <li><a href="https://code.visualstudio.com/docs/copilot/copilot-chat" target="_blank" rel="noopener noreferrer">VS Code Copilot Chat Documentation</a></li>
+            <li>Sample skills in your repository at <code>.github/copilot/skills/</code></li>
+          </ul>
 
           <nav class="step-navigation" aria-label="Step navigation">
             <button class="step-nav-button step-nav-prev" aria-label="Previous step">
