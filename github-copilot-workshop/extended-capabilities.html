@@ -394,49 +394,149 @@ def handle_skill(function_name, arguments):
                 <circle cx="12" cy="12" r="10"/>
                 <polyline points="12 6 12 12 16 14"/>
               </svg>
-              20 minutes
+              25 minutes
             </p>
           </header>
 
-          <p>Sub-agents allow a primary Copilot agent to delegate tasks to specialized agents, enabling modular, multi-step workflows that combine the strengths of multiple AI agents.</p>
+          <p>Sub-agents allow you to create specialized Copilot agents that work together in coordinated workflows. An orchestrator agent delegates tasks to specialized sub-agents, enabling modular, multi-step workflows that combine different AI capabilities.</p>
 
           <h2>What are Sub-Agents?</h2>
-          <p>A sub-agent is an agent that is invoked programmatically by a parent agent rather than directly by a user. The parent agent orchestrates the workflow, deciding which sub-agent to call and how to combine results into a final response.</p>
+          <p>Sub-agents are custom agent definitions (<code>.agent.md</code> files) that are invoked by a parent agent rather than directly by the user. The parent agent acts as an orchestrator, deciding which sub-agent to invoke and how to combine their results into a unified response.</p>
 
-          <h2>Architecture Overview</h2>
-          <p>A typical sub-agent architecture:</p>
+          <p>This differs from single-agent workflows where one agent handles all aspects of a task. With sub-agents, you can:</p>
+          <ul>
+            <li>Separate concerns by having specialized agents for research, implementation, testing, etc.</li>
+            <li>Reuse agent definitions across different workflows</li>
+            <li>Maintain focused context within each specialized agent</li>
+            <li>Build complex multi-step workflows with clear task delegation</li>
+          </ul>
+
+          <h2>Agent Definition Files</h2>
+          <p>Custom agents are defined in <code>.agent.md</code> files stored in your workspace. These files contain instructions that shape how the agent behaves:</p>
+          <pre><code># Research Agent
+
+You are a specialized research agent focused on gathering information
+and analyzing code.
+
+## Your Responsibilities
+
+- Search through the codebase to understand existing patterns
+- Identify relevant files, functions, and modules
+- Analyze documentation and comments
+- Provide recommendations based on findings
+
+## Response Format
+
+Structure your research results with:
+- Findings: Key files and patterns discovered
+- Analysis: How the code is structured
+- Recommendations: Implementation suggestions</code></pre>
+
+          <h2>Multi-Agent Architecture</h2>
+          <p>A typical multi-agent workflow involves:</p>
           <ol>
-            <li><strong>Orchestrator agent</strong> — Receives the user's request and decomposes it into sub-tasks</li>
-            <li><strong>Specialist sub-agents</strong> — Each handles a specific domain (e.g., code generation, data retrieval, content summarization)</li>
-            <li><strong>Aggregation</strong> — The orchestrator combines sub-agent results and returns a unified response</li>
+            <li><strong>Orchestrator agent</strong> — Receives user requests and decomposes them into sub-tasks</li>
+            <li><strong>Research sub-agent</strong> — Gathers information and analyzes the codebase</li>
+            <li><strong>Implementation sub-agent</strong> — Writes code and creates files based on research findings</li>
+            <li><strong>Testing sub-agent</strong> (optional) — Creates tests for the implemented code</li>
           </ol>
 
-          <h2>Implementing a Sub-Agent Workflow</h2>
-          <pre><code># Example: orchestrator calling two sub-agents
-def orchestrate(user_message):
-    # Step 1: delegate research to a retrieval sub-agent
-    docs = call_sub_agent("retrieval-agent", user_message)
+          <div class="info-box note">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="12" y1="16" x2="12" y2="12"/>
+              <line x1="12" y1="8" x2="12.01" y2="8"/>
+            </svg>
+            <div class="info-box-content">
+              <strong>Prerequisites</strong>
+              <p>This exercise requires VS Code with the GitHub Copilot extension and Copilot Chat with agent mode enabled. You'll need a GitHub Copilot license to use these features.</p>
+            </div>
+          </div>
 
-    # Step 2: delegate code generation to a coding sub-agent
-    code = call_sub_agent("coding-agent", {
-        "task": user_message,
-        "context": docs
-    })
-
-    return f"Here are the relevant docs:\n{docs}\n\nGenerated code:\n{code}"
-
-def call_sub_agent(agent_name, payload):
-    # Make an HTTP request to the sub-agent endpoint
-    import requests
-    response = requests.post(f"https://agents.example.com/{agent_name}", json=payload)
-    return response.json().get("result", "")</code></pre>
-
-          <h2>When to Use Sub-Agents</h2>
+          <h2>Exercise 1: Review Multi-Agent Setup</h2>
+          <p>We've created a complete multi-agent example for you to review. Download the example files:</p>
           <ul>
-            <li>When a task is too complex for a single agent to handle well</li>
-            <li>When different steps of a workflow require specialized knowledge or tools</li>
-            <li>When you want to reuse existing agents as building blocks</li>
-            <li>When parallel execution of independent tasks can reduce latency</li>
+            <li><a href="examples/sub-agents/orchestrator.agent.md" download><code>orchestrator.agent.md</code></a> — Parent agent that coordinates workflow</li>
+            <li><a href="examples/sub-agents/research.agent.md" download><code>research.agent.md</code></a> — Specialized agent for code analysis and research</li>
+            <li><a href="examples/sub-agents/implementation.agent.md" download><code>implementation.agent.md</code></a> — Specialized agent for writing code</li>
+            <li><a href="examples/sub-agents/README.md" download><code>README.md</code></a> — Detailed usage guide</li>
+          </ul>
+          <p>Review these files to understand how agents are structured and how they reference each other.</p>
+
+          <h2>Exercise 2: Create Your First Sub-Agent</h2>
+          <ol>
+            <li>In your workspace, create a <code>.github/agents/</code> directory</li>
+            <li>Create a file named <code>research.agent.md</code> with instructions for a research agent (use the example above as a template)</li>
+            <li>In VS Code Copilot Chat, test your agent by typing: <code>@research analyze the authentication setup in this project</code></li>
+            <li>Observe how the agent follows the instructions you provided</li>
+          </ol>
+
+          <h2>Exercise 3: Build an Orchestrator Workflow</h2>
+          <ol>
+            <li>Create <code>orchestrator.agent.md</code> that can delegate to your research agent</li>
+            <li>Create <code>implementation.agent.md</code> for writing code</li>
+            <li>Add delegation instructions to the orchestrator:
+              <pre><code>To invoke a sub-agent, use:
+@research-agent [task description]
+@implementation-agent [task description]</code></pre>
+            </li>
+            <li>Test the workflow: <code>@orchestrator add a user profile feature to the app</code></li>
+            <li>Observe how the orchestrator delegates tasks to research first, then implementation</li>
+          </ol>
+
+          <h2>Exercise 4: Context Passing Between Agents</h2>
+          <p>Pay attention to how context flows between agents:</p>
+          <ol>
+            <li>When the orchestrator calls the research agent, it passes the user's request</li>
+            <li>The research agent returns structured findings</li>
+            <li>The orchestrator includes those findings when calling the implementation agent</li>
+            <li>The final response combines insights from both agents</li>
+          </ol>
+          <p>Experiment by modifying the orchestrator to pass different context or format the output differently.</p>
+
+          <h2>Challenge: 3-Agent Pipeline</h2>
+          <p>Design a complete pipeline with three specialized agents:</p>
+          <ol>
+            <li><strong>Research Agent</strong>: Analyzes the codebase and gathers requirements</li>
+            <li><strong>Plan Agent</strong>: Creates a detailed implementation plan based on research</li>
+            <li><strong>Implementation Agent</strong>: Executes the plan and writes the code</li>
+          </ol>
+          <p>Create agent definitions for each, set up the orchestrator to call them in sequence, and test with a real feature request.</p>
+
+          <h2>Trade-offs of Multi-Agent Architectures</h2>
+
+          <h3>Advantages</h3>
+          <ul>
+            <li><strong>Separation of Concerns</strong>: Each agent has a clear, focused responsibility</li>
+            <li><strong>Reusability</strong>: Sub-agents can be reused across different workflows</li>
+            <li><strong>Better Context Management</strong>: Specialized agents maintain focused context</li>
+            <li><strong>Modularity</strong>: Easy to add or modify specialized agents</li>
+            <li><strong>Quality</strong>: Specialized agents often produce higher quality output in their domain</li>
+          </ul>
+
+          <h3>Disadvantages</h3>
+          <ul>
+            <li><strong>Complexity</strong>: More moving parts to manage and maintain</li>
+            <li><strong>Latency</strong>: Multiple agent calls increase overall response time</li>
+            <li><strong>Cost</strong>: Each agent invocation uses tokens, increasing API costs</li>
+            <li><strong>Coordination Overhead</strong>: Orchestrator must manage handoffs and context passing</li>
+            <li><strong>Debugging</strong>: Harder to trace issues across multiple agent interactions</li>
+          </ul>
+
+          <h3>When to Use Sub-Agents</h3>
+          <ul>
+            <li>Complex tasks that benefit from specialized expertise</li>
+            <li>Tasks requiring distinct phases (research → plan → implement)</li>
+            <li>When you want to reuse agent definitions across projects</li>
+            <li>When quality matters more than speed</li>
+          </ul>
+
+          <h3>When to Use a Single Agent</h3>
+          <ul>
+            <li>Simple, straightforward tasks</li>
+            <li>When low latency is critical</li>
+            <li>When keeping costs low is a priority</li>
+            <li>For exploratory or ad-hoc queries</li>
           </ul>
 
           <div class="info-box note">
@@ -446,17 +546,27 @@ def call_sub_agent(agent_name, payload):
               <line x1="12" y1="8" x2="12.01" y2="8"/>
             </svg>
             <div class="info-box-content">
-              <strong>Note</strong>
-              <p>Keep sub-agent interfaces simple and well-documented. An orchestrator is only as reliable as its sub-agents — ensure each sub-agent returns consistent, predictable output.</p>
+              <strong>Pro Tip</strong>
+              <p>Start with a single agent and only introduce sub-agents when you find that tasks naturally break into distinct phases or require different types of expertise. Premature decomposition can add unnecessary complexity.</p>
             </div>
           </div>
 
-          <h2>Hands-on Exercise</h2>
-          <ol>
-            <li>Create a <code>summarizer</code> sub-agent that takes a block of text and returns a bullet-point summary</li>
-            <li>Create an orchestrator agent that fetches content from a URL (using a skill) and then calls the summarizer</li>
-            <li>Test the workflow end-to-end by asking your orchestrator agent to summarize the GitHub Copilot documentation page</li>
-          </ol>
+          <h2>Best Practices</h2>
+          <ul>
+            <li>Keep each agent's instructions clear and focused on a single responsibility</li>
+            <li>Document the expected input and output format for each agent</li>
+            <li>Pass context explicitly between agents rather than relying on implicit state</li>
+            <li>Test individual agents before integrating them into workflows</li>
+            <li>Monitor token usage and costs when using multi-agent workflows</li>
+            <li>Version control your agent definitions alongside your code</li>
+          </ul>
+
+          <h2>Additional Resources</h2>
+          <ul>
+            <li><a href="examples/sub-agents/" target="_blank">Complete Multi-Agent Examples</a> — Download working agent definitions</li>
+            <li><a href="https://code.visualstudio.com/docs/copilot/copilot-customization" target="_blank" rel="noopener noreferrer">VS Code Copilot Customization</a> — Official documentation</li>
+            <li><a href="https://docs.github.com/copilot/customizing-copilot" target="_blank" rel="noopener noreferrer">GitHub Copilot Customization Guide</a></li>
+          </ul>
 
           <nav class="step-navigation" aria-label="Step navigation">
             <button class="step-nav-button step-nav-prev" aria-label="Previous step">
