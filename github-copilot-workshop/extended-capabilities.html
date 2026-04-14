@@ -1065,90 +1065,58 @@ Structure your research results with:
                 <circle cx="12" cy="12" r="10"/>
                 <polyline points="12 6 12 12 16 14"/>
               </svg>
-              15 minutes
+              90 minutes
             </p>
           </header>
 
-          <p>Copilot Memory enables agents to persist and retrieve information across conversations, allowing for more personalized, context-aware interactions over time.</p>
+          <p>Copilot Memory lets you persist preferences, project context, and in-progress task state in plain markdown files so that Copilot stays consistent across conversations — and across your whole team.</p>
 
           <h2>What is Copilot Memory?</h2>
-          <p>By default, Copilot agents are stateless — each conversation starts fresh. Memory adds a persistence layer that lets agents store facts, preferences, and context that can be recalled in future sessions.</p>
-
-          <h2>Types of Memory</h2>
+          <p>By default, every Copilot Chat conversation starts fresh. Memory adds a persistence layer using simple markdown files that Copilot reads automatically at the start of each chat:</p>
           <ul>
-            <li><strong>Short-term memory</strong> — Context maintained within a single conversation (automatically handled via the conversation window)</li>
-            <li><strong>Long-term memory</strong> — Persisted facts stored in an external store (database, vector store, etc.) and retrieved on demand</li>
-            <li><strong>Episodic memory</strong> — Summaries of past conversations stored and retrieved to inform future interactions</li>
+            <li><strong>User memory</strong> — Personal coding preferences that apply across all your projects and sessions</li>
+            <li><strong>Session memory</strong> — In-progress task state that lets you pick up exactly where you left off without re-explaining context</li>
+            <li><strong>Repository memory</strong> — Project conventions committed to version control and shared with the entire team</li>
           </ul>
 
-          <h2>Implementing Long-term Memory</h2>
-          <p>A common approach uses a vector database to store and semantically search memories:</p>
-          <pre><code># Example: storing and retrieving memories (Python)
-from openai import OpenAI
-
-client = OpenAI()
-
-def store_memory(text, memory_store):
-    embedding = client.embeddings.create(
-        model="text-embedding-3-small",
-        input=text
-    ).data[0].embedding
-    memory_store.append({"text": text, "embedding": embedding})
-
-def retrieve_memory(query, memory_store, top_k=3):
-    import numpy as np
-    query_embedding = client.embeddings.create(
-        model="text-embedding-3-small",
-        input=query
-    ).data[0].embedding
-    scores = [
-        np.dot(query_embedding, mem["embedding"])
-        for mem in memory_store
-    ]
-    top_indices = sorted(range(len(scores)), key=lambda i: scores[i], reverse=True)[:top_k]
-    return [memory_store[i]["text"] for i in top_indices]</code></pre>
-
-          <h2>Memory in Copilot Agents</h2>
-          <p>To integrate memory into a Copilot agent:</p>
-          <ol>
-            <li>At the start of each conversation, retrieve relevant memories based on the user's message</li>
-            <li>Inject the retrieved memories into the system prompt as context</li>
-            <li>At the end of the conversation, extract and store key facts from the exchange</li>
-          </ol>
-
-          <div class="info-box note">
+          <h2>Prerequisites</h2>
+          <div class="info-box warning">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-              <circle cx="12" cy="12" r="10"/>
-              <line x1="12" y1="16" x2="12" y2="12"/>
-              <line x1="12" y1="8" x2="12.01" y2="8"/>
+              <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+              <line x1="12" y1="9" x2="12" y2="13"/>
+              <line x1="12" y1="17" x2="12.01" y2="17"/>
             </svg>
             <div class="info-box-content">
-              <strong>Privacy Note</strong>
-              <p>Always be transparent with users about what information is being stored and provide a way for them to review or delete their stored memories.</p>
+              <strong>Before you begin, make sure you have:</strong>
+              <ul>
+                <li><strong>Visual Studio Code</strong> version 1.90 or later</li>
+                <li><strong>GitHub Copilot Chat extension</strong> installed and signed in</li>
+                <li><strong>Copilot memory enabled</strong> — open VS Code Settings, search for <strong>Copilot: Memory</strong>, and turn it on</li>
+              </ul>
             </div>
           </div>
 
-          <h2>Hands-on Exercise</h2>
-          <ol>
-            <li>Build a simple in-memory store for your agent using a Python list or dictionary</li>
-            <li>Add a <code>remember</code> skill that stores a key-value fact provided by the user</li>
-            <li>Add a <code>recall</code> skill that retrieves stored facts and inject them into the agent's response</li>
-          </ol>
+          <h2>Workshop Activity</h2>
+          <p>This topic has a dedicated hands-on workshop page with step-by-step exercises covering all three memory scopes, a design challenge, and best practices.</p>
 
-          <h3>What's Next?</h3>
-          <ul>
-            <li>Explore <a href="https://docs.github.com/copilot/building-copilot-extensions" target="_blank" rel="noopener noreferrer">Building Copilot Extensions</a> documentation</li>
-            <li>Review the <a href="https://github.com/github/github-mcp-server" target="_blank" rel="noopener noreferrer">GitHub MCP Server</a> as a reference implementation</li>
-            <li>Experiment with combining CLI, SDK, skills, sub-agents, and memory in a single end-to-end project</li>
-          </ul>
+          <a href="copilot-memory.html" class="button button-primary" style="display:inline-flex;align-items:center;gap:0.5rem;margin:1rem 0;">
+            Start the Copilot Memory Activity
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <line x1="5" y1="12" x2="19" y2="12"/>
+              <polyline points="12 5 19 12 12 19"/>
+            </svg>
+          </a>
 
-          <h3>Resources</h3>
-          <ul>
-            <li><a href="https://docs.github.com/copilot" target="_blank" rel="noopener noreferrer">GitHub Copilot Documentation</a></li>
-            <li><a href="https://docs.github.com/copilot/building-copilot-extensions" target="_blank" rel="noopener noreferrer">Building Copilot Extensions</a></li>
-            <li><a href="https://cli.github.com/manual/gh_copilot" target="_blank" rel="noopener noreferrer">GitHub Copilot CLI Reference</a></li>
-            <li><a href="https://github.com/github/awesome-copilot" target="_blank" rel="noopener noreferrer">Awesome Copilot</a></li>
-          </ul>
+          <h2>Quick Reference</h2>
+          <p>Memory files live in well-known locations — create them once and Copilot reads them automatically:</p>
+          <pre><code># User memory (personal preferences — applies to all projects)
+~/.vscode/copilot/memories/preferences.md
+
+# Session memory (current task state — typically not committed)
+.github/copilot/memories/session/current-task.md
+
+# Repository memory (team conventions — committed to git)
+.github/copilot/memories/conventions.md</code></pre>
 
           <nav class="step-navigation" aria-label="Step navigation">
             <button class="step-nav-button step-nav-prev" aria-label="Previous step">
