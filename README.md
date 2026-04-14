@@ -2,6 +2,8 @@
 
 Master AI-powered coding with GitHub Copilot through hands-on exercises and real-world examples.
 
+**🚀 [Start the Workshop](https://customer-workshops.github.io/copilot-workshop/)**
+
 ## Overview
 
 This workshop provides a comprehensive learning experience for GitHub Copilot, covering everything from basic code completion to advanced features like the Coding Agent. It's designed for developers who want to leverage AI assistance throughout their development workflow.
@@ -53,9 +55,9 @@ Explore advanced Copilot features for professional development workflows.
 
 ## Getting Started
 
-### Option 1: View Online
+### Option 1: Access Online
 
-Open `index.html` in your browser to start the workshop.
+Visit the workshop at **[https://customer-workshops.github.io/copilot-workshop/](https://customer-workshops.github.io/copilot-workshop/)** - no installation required!
 
 ### Option 2: Local Development
 
