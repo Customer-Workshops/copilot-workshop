@@ -202,10 +202,26 @@ eval "$(gh copilot alias -- bash)"</code></pre>
             </p>
           </header>
 
-          <p>The GitHub Copilot SDK allows you to programmatically integrate Copilot's AI capabilities into your own applications and tools, enabling you to build custom AI-powered experiences.</p>
+          <p>The GitHub Copilot SDK allows you to programmatically integrate Copilot's AI capabilities into your own applications and tools, enabling you to build custom AI-powered experiences that appear directly in Copilot Chat.</p>
 
-          <h2>What is the Copilot SDK?</h2>
+          <h2>Introduction: Copilot SDK Overview</h2>
           <p>The Copilot SDK (also referred to as the Copilot Extensions API) provides the building blocks to create GitHub Apps that communicate with Copilot. These extensions appear as agents within Copilot Chat and can respond to user messages with context-aware AI output.</p>
+
+          <h3>Extension Model</h3>
+          <p>Copilot Extensions follow a client-server architecture:</p>
+          <ul>
+            <li><strong>Client</strong> — GitHub Copilot Chat (in VS Code, GitHub.com, or GitHub Mobile)</li>
+            <li><strong>Server</strong> — Your custom agent endpoint that processes requests and generates responses</li>
+            <li><strong>Communication</strong> — HTTPS POST requests and Server-Sent Events (SSE) for streaming responses</li>
+          </ul>
+
+          <h3>Copilot Extensions vs. GitHub Apps</h3>
+          <p>Copilot Extensions are a specialized type of GitHub App:</p>
+          <ul>
+            <li><strong>GitHub Apps</strong> — General-purpose integrations that can automate workflows, manage repositories, and interact with GitHub's API</li>
+            <li><strong>Copilot Extensions</strong> — GitHub Apps with Copilot permissions that can be invoked in Copilot Chat to provide AI-powered assistance</li>
+          </ul>
+          <p>Every Copilot Extension is a GitHub App, but not every GitHub App is a Copilot Extension. To create a Copilot Extension, you enable Copilot permissions on your GitHub App and implement an agent endpoint.</p>
 
           <h2>Key Concepts</h2>
           <ul>
@@ -213,44 +229,7 @@ eval "$(gh copilot alias -- bash)"</code></pre>
             <li><strong>Agent endpoint</strong> — An HTTPS endpoint your app exposes that Copilot calls when a user invokes your agent</li>
             <li><strong>Server-Sent Events (SSE)</strong> — The streaming protocol used to send responses back to Copilot Chat in real time</li>
             <li><strong>Payload verification</strong> — Signature verification to ensure requests originate from GitHub</li>
-          </ul>
-
-          <h2>Getting Started</h2>
-          <ol>
-            <li>Create a new GitHub App in your organization or personal account settings</li>
-            <li>Enable <strong>Copilot</strong> under the app's permissions and set an agent URL</li>
-            <li>Implement the agent endpoint in your preferred language:
-              <pre><code># Example: minimal Python agent using Flask
-from flask import Flask, request, Response
-import json
-
-app = Flask(__name__)
-
-@app.route("/agent", methods=["POST"])
-def agent():
-    def generate():
-        yield "data: " + json.dumps({
-            "choices": [{
-                "delta": {"content": "Hello from my custom Copilot agent!"},
-                "finish_reason": None
-            }]
-        }) + "\n\n"
-        yield "data: " + json.dumps({
-            "choices": [{"delta": {}, "finish_reason": "stop"}]
-        }) + "\n\n"
-    return Response(generate(), mimetype="text/event-stream")
-
-if __name__ == "__main__":
-    app.run(port=3000)</code></pre>
-            </li>
-            <li>Install your GitHub App and invoke your agent in Copilot Chat with <code>@your-agent-name</code></li>
-          </ol>
-
-          <h2>SDK Libraries</h2>
-          <p>GitHub provides official SDK helpers to simplify agent development:</p>
-          <ul>
-            <li><a href="https://github.com/github/github-mcp-server" target="_blank" rel="noopener noreferrer">github-mcp-server</a> — Reference implementation using the Model Context Protocol (GitHub repository)</li>
-            <li><code>@github/copilot-extensions</code> — Node.js SDK for building Copilot agents</li>
+            <li><strong>Context references</strong> — Files, issues, PRs, and other resources that users can reference in their messages</li>
           </ul>
 
           <div class="info-box note">
@@ -260,17 +239,340 @@ if __name__ == "__main__":
               <line x1="12" y1="8" x2="12.01" y2="8"/>
             </svg>
             <div class="info-box-content">
-              <strong>Note</strong>
-              <p>Your agent endpoint must be publicly reachable over HTTPS. During development, tools like <a href="https://ngrok.com/" target="_blank" rel="noopener noreferrer">ngrok</a> can expose a local server for testing.</p>
+              <strong>Prerequisites</strong>
+              <p>Before starting, ensure you have: (1) A GitHub account with Copilot access, (2) Node.js 18+ or Python 3.9+, and (3) ngrok or similar tool for local HTTPS tunneling.</p>
             </div>
           </div>
 
-          <h2>Hands-on Exercise</h2>
+          <h2>Exercise 1: Set Up a New Copilot Extension Project</h2>
+          <p>Let's create your first Copilot Extension. You can choose either Node.js or Python.</p>
+
+          <h3>Option A: Node.js Project</h3>
           <ol>
-            <li>Create a minimal agent endpoint that responds with a greeting when invoked</li>
-            <li>Register it as a GitHub App with Copilot permissions and test it in Copilot Chat</li>
-            <li>Extend the agent to echo the user's message back with the current timestamp</li>
+            <li>Create a new directory and initialize a Node.js project:
+              <pre><code>mkdir my-copilot-extension
+cd my-copilot-extension
+npm init -y
+npm install express</code></pre>
+            </li>
+            <li>Create <code>server.js</code> with a basic Express server:
+              <pre><code>const express = require('express');
+const app = express();
+app.use(express.json());
+
+app.post('/agent', (req, res) =&gt; {
+  res.setHeader('Content-Type', 'text/event-stream');
+  res.write('data: ' + JSON.stringify({
+    choices: [{delta: {content: 'Hello!'}, finish_reason: null}]
+  }) + '\n\n');
+  res.write('data: ' + JSON.stringify({
+    choices: [{delta: {}, finish_reason: 'stop'}]
+  }) + '\n\n');
+  res.end();
+});
+
+app.listen(3000, () =&gt; console.log('Server running on port 3000'));</code></pre>
+            </li>
+            <li>Start the server: <code>node server.js</code></li>
+            <li>In another terminal, expose it with ngrok: <code>ngrok http 3000</code></li>
           </ol>
+
+          <h3>Option B: Python Project</h3>
+          <ol>
+            <li>Create a new directory and set up a virtual environment:
+              <pre><code>mkdir my-copilot-extension
+cd my-copilot-extension
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+pip install flask</code></pre>
+            </li>
+            <li>Create <code>app.py</code> with a basic Flask server:
+              <pre><code>from flask import Flask, Response
+import json
+
+app = Flask(__name__)
+
+@app.route('/agent', methods=['POST'])
+def agent():
+    def generate():
+        yield 'data: ' + json.dumps({
+            'choices': [{'delta': {'content': 'Hello!'}, 'finish_reason': None}]
+        }) + '\n\n'
+        yield 'data: ' + json.dumps({
+            'choices': [{'delta': {}, 'finish_reason': 'stop'}]
+        }) + '\n\n'
+    return Response(generate(), mimetype='text/event-stream')
+
+if __name__ == '__main__':
+    app.run(port=5000)</code></pre>
+            </li>
+            <li>Start the server: <code>python app.py</code></li>
+            <li>In another terminal, expose it with ngrok: <code>ngrok http 5000</code></li>
+          </ol>
+
+          <div class="info-box tip">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M12 8v4m0 4h.01"/>
+            </svg>
+            <div class="info-box-content">
+              <strong>Complete Examples</strong>
+              <p>Download complete working examples with more features from <a href="examples/copilot-sdk/" target="_blank">examples/copilot-sdk/</a> including Node.js and Python implementations.</p>
+            </div>
+          </div>
+
+          <h2>Exercise 2: Send a Prompt to the Copilot Model and Stream a Response</h2>
+          <p>Now let's enhance the extension to process user messages and stream responses word by word.</p>
+
+          <h3>Node.js Implementation</h3>
+          <pre><code>app.post('/agent', async (req, res) =&gt; {
+  const { messages } = req.body;
+  const userMessage = messages[messages.length - 1].content;
+
+  res.setHeader('Content-Type', 'text/event-stream');
+
+  // Generate response based on user message
+  const response = `You asked: "${userMessage}". Here's my response!`;
+  const words = response.split(' ');
+
+  // Stream word by word
+  for (const word of words) {
+    res.write('data: ' + JSON.stringify({
+      choices: [{delta: {content: word + ' '}, finish_reason: null}]
+    }) + '\n\n');
+    await new Promise(r =&gt; setTimeout(r, 50)); // Delay for effect
+  }
+
+  // Send completion signal
+  res.write('data: ' + JSON.stringify({
+    choices: [{delta: {}, finish_reason: 'stop'}]
+  }) + '\n\n');
+  res.end();
+});</code></pre>
+
+          <h3>Python Implementation</h3>
+          <pre><code>import time
+
+@app.route('/agent', methods=['POST'])
+def agent():
+    data = request.json
+    messages = data.get('messages', [])
+    user_message = messages[-1]['content']
+
+    def stream_response():
+        response = f'You asked: "{user_message}". Here\'s my response!'
+        words = response.split(' ')
+
+        # Stream word by word
+        for word in words:
+            chunk = {
+                'choices': [{'delta': {'content': word + ' '}, 'finish_reason': None}]
+            }
+            yield f'data: {json.dumps(chunk)}\n\n'
+            time.sleep(0.05)
+
+        # Send completion signal
+        final = {'choices': [{'delta': {}, 'finish_reason': 'stop'}]}
+        yield f'data: {json.dumps(final)}\n\n'
+
+    return Response(stream_response(), mimetype='text/event-stream')</code></pre>
+
+          <p>Test your streaming implementation by asking different questions and watching the response appear word by word!</p>
+
+          <h2>Exercise 3: Add Context to Model Requests</h2>
+          <p>Copilot can provide context about files, issues, and other resources the user references. Let's use this context in our responses.</p>
+
+          <h3>Understanding Context References</h3>
+          <p>When users mention files or resources, GitHub includes them in the request:</p>
+          <pre><code>{
+  "messages": [{"role": "user", "content": "Explain this file"}],
+  "copilot_references": [
+    {
+      "type": "file",
+      "id": "src/app.js",
+      "data": {"content": "const express = require('express');..."}
+    }
+  ]
+}</code></pre>
+
+          <h3>Using Context in Your Extension</h3>
+          <pre><code>// Node.js
+app.post('/agent', (req, res) =&gt; {
+  const { messages, copilot_references } = req.body;
+  const userMessage = messages[messages.length - 1].content;
+
+  res.setHeader('Content-Type', 'text/event-stream');
+
+  let response = `Analyzing your request: "${userMessage}"`;
+
+  if (copilot_references &amp;&amp; copilot_references.length &gt; 0) {
+    response += '\n\nContext provided:';
+    copilot_references.forEach(ref =&gt; {
+      response += `\n- ${ref.type}: ${ref.id}`;
+      if (ref.type === 'file' &amp;&amp; ref.data.content) {
+        const lines = ref.data.content.split('\n').length;
+        response += ` (${lines} lines)`;
+      }
+    });
+  }
+
+  // Stream the response...
+});</code></pre>
+
+          <h3>Try It Out</h3>
+          <ol>
+            <li>Update your extension to handle context references</li>
+            <li>Restart your server</li>
+            <li>In Copilot Chat, open a file and ask: <code>@your-extension explain this file</code></li>
+            <li>Your extension should acknowledge the file context in its response</li>
+          </ol>
+
+          <h2>Exercise 4: Register the Extension in GitHub and Test</h2>
+          <p>Now let's make your extension official by registering it as a GitHub App.</p>
+
+          <h3>Create a GitHub App</h3>
+          <ol>
+            <li>Go to <strong>Settings → Developer settings → GitHub Apps → New GitHub App</strong></li>
+            <li>Fill in the basic information:
+              <ul>
+                <li><strong>Name</strong>: Choose a unique name (e.g., "My Copilot Helper")</li>
+                <li><strong>Homepage URL</strong>: Can be your GitHub profile or repository</li>
+                <li><strong>Webhook URL</strong>: Your ngrok HTTPS URL + /agent</li>
+              </ul>
+            </li>
+            <li>Under <strong>Permissions</strong>, enable:
+              <ul>
+                <li><strong>Copilot chat</strong> — Read access</li>
+              </ul>
+            </li>
+            <li>Under <strong>Copilot</strong> section:
+              <ul>
+                <li>Set <strong>App Type</strong> to "Agent"</li>
+                <li>Set <strong>URL</strong> to your ngrok HTTPS URL + /agent</li>
+                <li>Optionally add inference description and model</li>
+              </ul>
+            </li>
+            <li>Click <strong>Create GitHub App</strong></li>
+          </ol>
+
+          <h3>Install and Test</h3>
+          <ol>
+            <li>Install the app to your account: Click <strong>Install App</strong> in the left sidebar</li>
+            <li>Open GitHub Copilot Chat (in VS Code or GitHub.com)</li>
+            <li>Invoke your extension: <code>@your-app-name hello!</code></li>
+            <li>You should see your extension respond!</li>
+          </ol>
+
+          <div class="info-box warning">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+              <line x1="12" y1="9" x2="12" y2="13"/>
+              <line x1="12" y1="17" x2="12.01" y2="17"/>
+            </svg>
+            <div class="info-box-content">
+              <strong>Important</strong>
+              <p>Your agent endpoint must use HTTPS. ngrok provides HTTPS URLs automatically. In production, deploy to a platform with HTTPS support (Heroku, Railway, AWS, etc.).</p>
+            </div>
+          </div>
+
+          <h2>Challenge: Build a Domain-Specific Extension</h2>
+          <p>Now that you understand the basics, build something more specialized! Here's a challenge to create a changelog generator extension.</p>
+
+          <h3>Changelog Generator Extension</h3>
+          <p>Build an extension that generates changelogs from git repositories:</p>
+          <ul>
+            <li><strong>Feature</strong>: User provides a repository and version range</li>
+            <li><strong>Processing</strong>: Fetch commits between versions using GitHub API</li>
+            <li><strong>Output</strong>: Categorized changelog (features, fixes, other)</li>
+          </ul>
+
+          <h3>Implementation Steps</h3>
+          <ol>
+            <li>Install GitHub API client:
+              <ul>
+                <li>Node.js: <code>npm install @octokit/rest</code></li>
+                <li>Python: <code>pip install PyGithub</code></li>
+              </ul>
+            </li>
+            <li>Parse user messages to extract repo name and version tags</li>
+            <li>Use GitHub API to fetch commits between tags</li>
+            <li>Categorize commits by keywords (feat, fix, docs, etc.)</li>
+            <li>Stream formatted changelog back to Copilot Chat</li>
+          </ol>
+
+          <h3>Example Request</h3>
+          <pre><code>@changelog-generator create changelog for microsoft/vscode from v1.85.0 to v1.86.0</code></pre>
+
+          <h3>Example Response</h3>
+          <pre><code># Changelog: v1.85.0 → v1.86.0
+
+## ✨ Features
+- Add new editor theme support
+- Implement improved search functionality
+
+## 🐛 Bug Fixes
+- Fix memory leak in extension host
+- Resolve syntax highlighting issue
+
+## 📝 Other Changes
+- Update documentation
+- Refactor test suite
+
+**Total commits:** 147</code></pre>
+
+          <div class="info-box tip">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M12 8v4m0 4h.01"/>
+            </svg>
+            <div class="info-box-content">
+              <strong>Ready-Made Example</strong>
+              <p>Find a complete changelog generator implementation in <a href="examples/copilot-sdk/changelog-generator/" target="_blank">examples/copilot-sdk/changelog-generator/</a> with full source code and documentation!</p>
+            </div>
+          </div>
+
+          <h3>Other Extension Ideas</h3>
+          <ul>
+            <li><strong>Code Review Assistant</strong> — Analyze PRs and provide feedback</li>
+            <li><strong>Documentation Generator</strong> — Create docs from code comments</li>
+            <li><strong>Test Generator</strong> — Generate unit tests for functions</li>
+            <li><strong>Issue Triager</strong> — Categorize and label GitHub issues</li>
+            <li><strong>Deployment Helper</strong> — Check deployment status and logs</li>
+            <li><strong>Security Scanner</strong> — Scan code for common vulnerabilities</li>
+          </ul>
+
+          <h2>SDK Libraries and Tools</h2>
+          <p>GitHub and the community provide libraries to simplify extension development:</p>
+          <ul>
+            <li><a href="https://github.com/github/github-mcp-server" target="_blank" rel="noopener noreferrer">github-mcp-server</a> — Reference implementation using the Model Context Protocol</li>
+            <li><a href="https://www.npmjs.com/package/@github/copilot-extensions" target="_blank" rel="noopener noreferrer">@github/copilot-extensions</a> — Official Node.js SDK</li>
+            <li><a href="https://expressjs.com/" target="_blank" rel="noopener noreferrer">Express.js</a> — Popular Node.js web framework</li>
+            <li><a href="https://flask.palletsprojects.com/" target="_blank" rel="noopener noreferrer">Flask</a> — Lightweight Python web framework</li>
+            <li><a href="https://github.com/octokit/rest.js" target="_blank" rel="noopener noreferrer">Octokit</a> — GitHub API client for Node.js</li>
+            <li><a href="https://pygithub.readthedocs.io/" target="_blank" rel="noopener noreferrer">PyGithub</a> — GitHub API client for Python</li>
+          </ul>
+
+          <h2>Best Practices</h2>
+          <ul>
+            <li><strong>Verify signatures</strong> — Always verify request signatures in production to ensure requests come from GitHub</li>
+            <li><strong>Handle errors gracefully</strong> — Stream error messages back to users rather than returning HTTP errors</li>
+            <li><strong>Stream responses</strong> — Use SSE to provide real-time feedback as your extension processes requests</li>
+            <li><strong>Add context awareness</strong> — Use copilot_references to access files, issues, and other resources</li>
+            <li><strong>Keep responses concise</strong> — Users expect quick, actionable responses</li>
+            <li><strong>Document your extension</strong> — Provide clear instructions on how to use your extension</li>
+            <li><strong>Test thoroughly</strong> — Test with various inputs and edge cases</li>
+            <li><strong>Monitor usage</strong> — Track errors and usage patterns to improve your extension</li>
+          </ul>
+
+          <h2>Reference Links</h2>
+          <ul>
+            <li><a href="https://docs.github.com/copilot/building-copilot-extensions" target="_blank" rel="noopener noreferrer">Building Copilot Extensions</a> — Official GitHub documentation</li>
+            <li><a href="https://docs.github.com/copilot/building-copilot-extensions/creating-a-copilot-extension/creating-a-github-app-for-your-copilot-extension" target="_blank" rel="noopener noreferrer">Copilot Extensions Quickstart</a> — Step-by-step guide</li>
+            <li><a href="https://docs.github.com/apps" target="_blank" rel="noopener noreferrer">GitHub Apps Documentation</a> — Creating and managing GitHub Apps</li>
+            <li><a href="https://modelcontextprotocol.io/" target="_blank" rel="noopener noreferrer">Model Context Protocol</a> — Standardized protocol for AI model interactions</li>
+            <li><a href="https://github.com/github/copilot-extensions-examples" target="_blank" rel="noopener noreferrer">Copilot Extensions Examples</a> — Community examples and templates</li>
+            <li><a href="https://html.spec.whatwg.org/multipage/server-sent-events.html" target="_blank" rel="noopener noreferrer">Server-Sent Events Specification</a> — SSE protocol details</li>
+          </ul>
 
           <nav class="step-navigation" aria-label="Step navigation">
             <button class="step-nav-button step-nav-prev" aria-label="Previous step">
