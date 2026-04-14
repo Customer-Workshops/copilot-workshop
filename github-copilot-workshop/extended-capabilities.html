@@ -115,59 +115,60 @@
                 <circle cx="12" cy="12" r="10"/>
                 <polyline points="12 6 12 12 16 14"/>
               </svg>
-              15 minutes
+              45 minutes
             </p>
           </header>
 
           <p>GitHub Copilot CLI brings AI-powered assistance directly to your terminal, helping you craft shell commands, explain what commands do, and navigate your development environment more efficiently.</p>
 
           <h2>What is Copilot CLI?</h2>
-          <p>Copilot CLI is a command-line extension that lets you ask Copilot questions in plain language directly from your terminal. It supports two key sub-commands:</p>
+          <p>Copilot CLI is a <a href="https://cli.github.com/" target="_blank" rel="noopener noreferrer">GitHub CLI</a> extension that lets you ask Copilot questions in plain language directly from your terminal. It supports two key sub-commands:</p>
           <ul>
-            <li><code>gh copilot suggest</code> — Suggest a shell command for a given task</li>
-            <li><code>gh copilot explain</code> — Explain what a shell command does</li>
+            <li><code>gh copilot suggest</code> — Translate a natural-language task description into a shell command</li>
+            <li><code>gh copilot explain</code> — Get a plain-language explanation of any shell command</li>
           </ul>
 
-          <h2>Installation</h2>
-          <p>Copilot CLI is available as a GitHub CLI extension. To install it:</p>
-          <ol>
-            <li>Ensure the <a href="https://cli.github.com/" target="_blank" rel="noopener noreferrer">GitHub CLI</a> (<code>gh</code>) is installed and authenticated</li>
-            <li>Install the extension:
-              <pre><code>gh extension install github/gh-copilot</code></pre>
-            </li>
-            <li>Verify the installation:
-              <pre><code>gh copilot --version</code></pre>
-            </li>
-          </ol>
-
-          <h2>Suggesting Commands</h2>
-          <p>Use <code>gh copilot suggest</code> to get a shell command for a plain-language description of a task:</p>
-          <pre><code>gh copilot suggest "list all running Docker containers and their port mappings"</code></pre>
-          <p>Copilot will suggest a command and ask whether you want to copy it to your clipboard, run it directly, or revise the request.</p>
-
-          <h2>Explaining Commands</h2>
-          <p>Use <code>gh copilot explain</code> to understand what an unfamiliar command does:</p>
-          <pre><code>gh copilot explain "git rebase -i HEAD~3"</code></pre>
-          <p>Copilot will provide a clear, plain-language explanation of the command and its flags.</p>
-
-          <div class="info-box note">
+          <h2>Prerequisites</h2>
+          <div class="info-box warning">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-              <circle cx="12" cy="12" r="10"/>
-              <line x1="12" y1="16" x2="12" y2="12"/>
-              <line x1="12" y1="8" x2="12.01" y2="8"/>
+              <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+              <line x1="12" y1="9" x2="12" y2="13"/>
+              <line x1="12" y1="17" x2="12.01" y2="17"/>
             </svg>
             <div class="info-box-content">
-              <strong>Tip</strong>
-              <p>You can pipe command output to Copilot explain for contextual help: <code>cat error.log | gh copilot explain</code></p>
+              <strong>Before you begin, make sure you have:</strong>
+              <ul>
+                <li><strong>GitHub CLI (<code>gh</code>) v2.x or later</strong> installed and authenticated — <a href="https://cli.github.com/" target="_blank" rel="noopener noreferrer">Install from cli.github.com</a></li>
+                <li><strong>A GitHub Copilot license</strong> — Individual, Business, or Enterprise. <a href="https://github.com/features/copilot" target="_blank" rel="noopener noreferrer">Learn more about plans</a></li>
+                <li><strong>A supported shell</strong> — Bash, Zsh, Fish, or PowerShell</li>
+              </ul>
             </div>
           </div>
 
-          <h2>Hands-on Exercise</h2>
-          <ol>
-            <li>Ask Copilot CLI to suggest a command to find all files larger than 100 MB in your home directory</li>
-            <li>Ask Copilot CLI to explain the output of <code>ps aux | grep node</code></li>
-            <li>Use <code>gh copilot suggest</code> to generate a <code>git</code> command that shows a compact graph of the last 10 commits across all branches</li>
-          </ol>
+          <h2>Workshop Activity</h2>
+          <p>This topic has a dedicated hands-on workshop page with step-by-step exercises covering installation, command suggestions, explanations, shell aliases, a real-world challenge, and tips &amp; best practices.</p>
+
+          <a href="copilot-cli.html" class="button button-primary" style="display:inline-flex;align-items:center;gap:0.5rem;margin:1rem 0;">
+            Start the Copilot CLI Activity
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <line x1="5" y1="12" x2="19" y2="12"/>
+              <polyline points="12 5 19 12 12 19"/>
+            </svg>
+          </a>
+
+          <h2>Quick Reference</h2>
+          <p>Install the extension and start using it in minutes:</p>
+          <pre><code># Install
+gh extension install github/gh-copilot
+
+# Suggest a command from plain English
+gh copilot suggest "list all files modified in the last 7 days"
+
+# Explain an unfamiliar command
+gh copilot explain "git rebase -i HEAD~3"
+
+# Set up short aliases (ghcs / ghce)
+eval "$(gh copilot alias -- bash)"</code></pre>
 
           <nav class="step-navigation" aria-label="Step navigation">
             <button class="step-nav-button step-nav-prev" disabled aria-label="Previous step">

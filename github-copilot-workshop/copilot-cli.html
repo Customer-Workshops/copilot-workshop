@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Learn to use GitHub Copilot CLI to get AI-powered shell command suggestions and explanations directly in your terminal.">
+  <meta name="theme-color" content="#6C21D9">
+  <title>Copilot CLI - GitHub Copilot Workshop</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', var(--font-family); }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="site-header" role="banner">
+    <div class="header-brand">
+      <svg class="header-logo" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+      </svg>
+      <a href="../index.html" class="header-title">GitHub Copilot Workshop</a>
+    </div>
+    <nav class="header-nav" aria-label="Main navigation">
+      <a href="../index.html" class="header-nav-link">Home</a>
+      <a href="start-coding.html" class="header-nav-link">Start Coding with AI</a>
+      <a href="pro-features.html" class="header-nav-link">Copilot Pro Features</a>
+      <a href="extended-capabilities.html" class="header-nav-link active">Extended Capabilities</a>
+      <button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark mode">
+        <svg class="theme-toggle-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span class="theme-toggle-text">Dark</span>
+      </button>
+    </nav>
+  </header>
+
+  <!-- Workshop Layout -->
+  <div class="workshop-layout">
+    <!-- Sidebar Navigation -->
+    <aside id="workshop-sidebar" class="workshop-sidebar" role="navigation" aria-label="Workshop steps">
+      <div class="sidebar-header">
+        <a href="extended-capabilities.html" class="sidebar-back">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <line x1="19" y1="12" x2="5" y2="12"/>
+            <polyline points="12 19 5 12 12 5"/>
+          </svg>
+          Back to Path 3
+        </a>
+        <h2 class="sidebar-title">Copilot CLI</h2>
+      </div>
+
+      <nav class="sidebar-nav">
+        <ol class="sidebar-nav-list">
+          <li class="sidebar-nav-item">
+            <a href="#step-1" class="sidebar-nav-link active">
+              <span class="sidebar-nav-number">1</span>
+              <span class="sidebar-nav-text">Introduction</span>
+            </a>
+          </li>
+          <li class="sidebar-nav-item">
+            <a href="#step-2" class="sidebar-nav-link">
+              <span class="sidebar-nav-number">2</span>
+              <span class="sidebar-nav-text">Install Copilot CLI</span>
+            </a>
+          </li>
+          <li class="sidebar-nav-item">
+            <a href="#step-3" class="sidebar-nav-link">
+              <span class="sidebar-nav-number">3</span>
+              <span class="sidebar-nav-text">Suggest Commands</span>
+            </a>
+          </li>
+          <li class="sidebar-nav-item">
+            <a href="#step-4" class="sidebar-nav-link">
+              <span class="sidebar-nav-number">4</span>
+              <span class="sidebar-nav-text">Explain Commands</span>
+            </a>
+          </li>
+          <li class="sidebar-nav-item">
+            <a href="#step-5" class="sidebar-nav-link">
+              <span class="sidebar-nav-number">5</span>
+              <span class="sidebar-nav-text">Shell Aliases</span>
+            </a>
+          </li>
+          <li class="sidebar-nav-item">
+            <a href="#step-6" class="sidebar-nav-link">
+              <span class="sidebar-nav-number">6</span>
+              <span class="sidebar-nav-text">Challenge</span>
+            </a>
+          </li>
+          <li class="sidebar-nav-item">
+            <a href="#step-7" class="sidebar-nav-link">
+              <span class="sidebar-nav-number">7</span>
+              <span class="sidebar-nav-text">Tips &amp; Best Practices</span>
+            </a>
+          </li>
+        </ol>
+      </nav>
+
+      <div class="progress-container">
+        <div class="progress-label">
+          <span>Progress</span>
+          <span><span class="progress-current">1</span> / <span class="progress-total">7</span></span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" style="width: 14%;"></div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Sidebar overlay for mobile -->
+    <div id="sidebar-overlay" class="sidebar-overlay" aria-hidden="true"></div>
+
+    <!-- Main Content -->
+    <main class="workshop-content" role="main">
+      <div class="workshop-content-inner">
+
+        <!-- Step 1: Introduction -->
+        <section id="step-1" class="step-section active" aria-labelledby="step-1-title">
+          <header class="step-header">
+            <span class="step-number">Step 1 of 7</span>
+            <h1 id="step-1-title" class="step-title">Introduction to Copilot CLI</h1>
+            <p class="step-duration">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12 6 12 12 16 14"/>
+              </svg>
+              5 minutes
+            </p>
+          </header>
+
+          <p>GitHub Copilot CLI brings AI-powered assistance directly to your terminal. Instead of switching to a browser to look up a command or its flags, you can ask Copilot in plain language — right where you are working.</p>
+
+          <h2>What is Copilot CLI?</h2>
+          <p>Copilot CLI is a <a href="https://cli.github.com/" target="_blank" rel="noopener noreferrer">GitHub CLI</a> extension that lets you interact with GitHub Copilot from your terminal. It provides two primary sub-commands:</p>
+          <ul>
+            <li><code>gh copilot suggest</code> — Translate a natural-language task description into a shell command</li>
+            <li><code>gh copilot explain</code> — Get a plain-language explanation of any shell command</li>
+          </ul>
+
+          <h2>Why Does It Matter?</h2>
+          <p>Developers spend a significant portion of their time in the terminal. Copilot CLI integrates AI assistance directly into that workflow so you can:</p>
+          <ul>
+            <li>Avoid context-switching to search engines or documentation sites</li>
+            <li>Quickly recall syntax for commands you use infrequently</li>
+            <li>Understand unfamiliar commands before running them</li>
+            <li>Discover more efficient ways to accomplish common tasks</li>
+            <li>Learn new tools and options without leaving the terminal</li>
+          </ul>
+
+          <h2>Learning Objectives</h2>
+          <p>By the end of this workshop activity you will be able to:</p>
+          <ul>
+            <li>Install and authenticate the GitHub Copilot CLI extension</li>
+            <li>Use <code>gh copilot suggest</code> to get shell command suggestions from natural language</li>
+            <li>Use <code>gh copilot explain</code> to understand unfamiliar commands</li>
+            <li>Set up shell aliases (<code>ghcs</code> and <code>ghce</code>) for faster access</li>
+            <li>Integrate Copilot CLI into everyday terminal workflows</li>
+          </ul>
+
+          <h2>Prerequisites</h2>
+
+          <div class="info-box warning">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+              <line x1="12" y1="9" x2="12" y2="13"/>
+              <line x1="12" y1="17" x2="12.01" y2="17"/>
+            </svg>
+            <div class="info-box-content">
+              <strong>Before you begin, make sure you have:</strong>
+              <ul>
+                <li><strong>GitHub CLI (<code>gh</code>) v2.x or later</strong> installed and authenticated — <a href="https://cli.github.com/" target="_blank" rel="noopener noreferrer">Install from cli.github.com</a></li>
+                <li><strong>A GitHub Copilot license</strong> — Individual, Business, or Enterprise. <a href="https://github.com/features/copilot" target="_blank" rel="noopener noreferrer">Learn more about plans</a></li>
+                <li><strong>A supported shell</strong> — Bash, Zsh, Fish, or PowerShell</li>
+              </ul>
+            </div>
+          </div>
+
+          <p>Verify that <code>gh</code> is installed and authenticated by running:</p>
+          <pre><code>gh auth status</code></pre>
+          <p>You should see a confirmation that you are logged in to github.com.</p>
+
+          <nav class="step-navigation" aria-label="Step navigation">
+            <button class="step-nav-button step-nav-prev" disabled aria-label="Previous step">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <line x1="19" y1="12" x2="5" y2="12"/>
+                <polyline points="12 19 5 12 12 5"/>
+              </svg>
+              Previous
+            </button>
+            <button class="step-nav-button primary step-nav-next" aria-label="Next step">
+              Next
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <line x1="5" y1="12" x2="19" y2="12"/>
+                <polyline points="12 5 19 12 12 19"/>
+              </svg>
+            </button>
+          </nav>
+        </section>
+
+        <!-- Step 2: Install Copilot CLI -->
+        <section id="step-2" class="step-section" aria-labelledby="step-2-title">
+          <header class="step-header">
+            <span class="step-number">Step 2 of 7</span>
+            <h1 id="step-2-title" class="step-title">Exercise 1: Install Copilot CLI</h1>
+            <p class="step-duration">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12 6 12 12 16 14"/>
+              </svg>
+              5 minutes
+            </p>
+          </header>
+
+          <p>Copilot CLI is distributed as a GitHub CLI extension. Extensions are installed with a single command and kept up to date with <code>gh extension upgrade</code>.</p>
+
+          <h2>Install the Extension</h2>
+          <p>Run the following command to install the GitHub Copilot CLI extension:</p>
+          <pre><code>gh extension install github/gh-copilot</code></pre>
+
+          <h2>Verify the Installation</h2>
+          <p>Confirm the extension is installed and check which version is active:</p>
+          <pre><code>gh copilot --version</code></pre>
+          <p>You should see output similar to:</p>
+          <pre><code>gh-copilot version 1.x.x (yyyy-mm-dd)</code></pre>
+
+          <h2>View Available Commands</h2>
+          <p>Explore what Copilot CLI can do:</p>
+          <pre><code>gh copilot --help</code></pre>
+
+          <div class="info-box note">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="12" y1="16" x2="12" y2="12"/>
+              <line x1="12" y1="8" x2="12.01" y2="8"/>
+            </svg>
+            <div class="info-box-content">
+              <strong>Keeping It Up to Date</strong>
+              <p>Update the extension at any time with:</p>
+              <pre><code>gh extension upgrade gh-copilot</code></pre>
+            </div>
+          </div>
+
+          <h2>Authenticate (if prompted)</h2>
+          <p>On first use, Copilot CLI may prompt you to grant additional permissions. Follow the on-screen instructions to complete the OAuth flow in your browser. After authentication, return to your terminal — you are ready to start using Copilot CLI.</p>
+
+          <nav class="step-navigation" aria-label="Step navigation">
+            <button class="step-nav-button step-nav-prev" aria-label="Previous step">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <line x1="19" y1="12" x2="5" y2="12"/>
+                <polyline points="12 19 5 12 12 5"/>
+              </svg>
+              Previous
+            </button>
+            <button class="step-nav-button primary step-nav-next" aria-label="Next step">
+              Next
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <line x1="5" y1="12" x2="19" y2="12"/>
+                <polyline points="12 5 19 12 12 19"/>
+              </svg>
+            </button>
+          </nav>
+        </section>
+
+        <!-- Step 3: Suggest Commands -->
+        <section id="step-3" class="step-section" aria-labelledby="step-3-title">
+          <header class="step-header">
+            <span class="step-number">Step 3 of 7</span>
+            <h1 id="step-3-title" class="step-title">Exercise 2: Suggest Commands</h1>
+            <p class="step-duration">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12 6 12 12 16 14"/>
+              </svg>
+              10 minutes
+            </p>
+          </header>
+
+          <p><code>gh copilot suggest</code> converts a plain-language description into a shell command. You describe what you want to accomplish, and Copilot returns a command you can copy, run, or refine.</p>
+
+          <h2>Basic Usage</h2>
+          <pre><code>gh copilot suggest "&lt;describe the task in plain English&gt;"</code></pre>
+
+          <h2>Choosing a Shell Target</h2>
+          <p>You can tell Copilot which shell environment you are targeting with the <code>--target</code> flag:</p>
+          <pre><code>gh copilot suggest --target shell "list all files modified in the last 7 days"
+gh copilot suggest --target git "show a compact commit log for the last 10 commits"
+gh copilot suggest --target gh "list open pull requests in the current repo"</code></pre>
+          <p>Supported targets are <code>shell</code>, <code>git</code>, and <code>gh</code>. When omitted, Copilot infers the best target from your description.</p>
+
+          <h2>Interactive Response</h2>
+          <p>After Copilot suggests a command, it presents an interactive menu:</p>
+          <ul>
+            <li><strong>Copy command to clipboard</strong> — Paste it into your terminal manually</li>
+            <li><strong>Explain command</strong> — Get a plain-language explanation before running it</li>
+            <li><strong>Execute command</strong> — Run the command immediately in your current shell</li>
+            <li><strong>Revise command</strong> — Provide additional context to refine the suggestion</li>
+          </ul>
+
+          <h2>Hands-on Exercises</h2>
+          <ol>
+            <li>Ask Copilot to suggest a command to list all files modified in the last 7 days:
+              <pre><code>gh copilot suggest "list all files modified in the last 7 days"</code></pre>
+            </li>
+            <li>Ask for a command to find all files larger than 100 MB in your home directory:
+              <pre><code>gh copilot suggest "find all files larger than 100MB in my home directory"</code></pre>
+            </li>
+            <li>Use the <code>--target git</code> flag to ask for a Git command:
+              <pre><code>gh copilot suggest --target git "show a compact graph of the last 10 commits across all branches"</code></pre>
+            </li>
+            <li>Try the interactive <strong>Revise command</strong> option to add more specificity to one of the suggestions</li>
+          </ol>
+
+          <div class="info-box note">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="12" y1="16" x2="12" y2="12"/>
+              <line x1="12" y1="8" x2="12.01" y2="8"/>
+            </svg>
+            <div class="info-box-content">
+              <strong>Tip</strong>
+              <p>The more specific your description, the more accurate the suggestion. Include details like file types, time ranges, or output formats to get better results.</p>
+            </div>
+          </div>
+
+          <nav class="step-navigation" aria-label="Step navigation">
+            <button class="step-nav-button step-nav-prev" aria-label="Previous step">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <line x1="19" y1="12" x2="5" y2="12"/>
+                <polyline points="12 19 5 12 12 5"/>
+              </svg>
+              Previous
+            </button>
+            <button class="step-nav-button primary step-nav-next" aria-label="Next step">
+              Next
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <line x1="5" y1="12" x2="19" y2="12"/>
+                <polyline points="12 5 19 12 12 19"/>
+              </svg>
+            </button>
+          </nav>
+        </section>
+
+        <!-- Step 4: Explain Commands -->
+        <section id="step-4" class="step-section" aria-labelledby="step-4-title">
+          <header class="step-header">
+            <span class="step-number">Step 4 of 7</span>
+            <h1 id="step-4-title" class="step-title">Exercise 3: Explain Commands</h1>
+            <p class="step-duration">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12 6 12 12 16 14"/>
+              </svg>
+              10 minutes
+            </p>
+          </header>
+
+          <p><code>gh copilot explain</code> takes any shell command and returns a clear, plain-language explanation of what it does — including each flag and argument. This is invaluable when you encounter unfamiliar commands in scripts, documentation, or Stack Overflow answers.</p>
+
+          <h2>Basic Usage</h2>
+          <pre><code>gh copilot explain "&lt;command to explain&gt;"</code></pre>
+
+          <h2>Hands-on Exercises</h2>
+          <ol>
+            <li>Explain an interactive Git rebase:
+              <pre><code>gh copilot explain "git rebase -i HEAD~3"</code></pre>
+            </li>
+            <li>Explain a complex <code>find</code> command:
+              <pre><code>gh copilot explain "find . -type f -name '*.log' -mtime +30 -delete"</code></pre>
+            </li>
+            <li>Explain a <code>ps</code> pipeline:
+              <pre><code>gh copilot explain "ps aux | grep node | awk '{print $2}' | xargs kill"</code></pre>
+            </li>
+            <li>Paste a command from a script you are unfamiliar with and ask Copilot to explain it</li>
+          </ol>
+
+          <div class="info-box note">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="12" y1="16" x2="12" y2="12"/>
+              <line x1="12" y1="8" x2="12.01" y2="8"/>
+            </svg>
+            <div class="info-box-content">
+              <strong>Tip</strong>
+              <p>Always use <code>gh copilot explain</code> before running an unfamiliar command with elevated privileges (<code>sudo</code>) or destructive flags (<code>-rf</code>, <code>--force</code>, <code>--delete</code>). Understanding a command before running it is a healthy habit.</p>
+            </div>
+          </div>
+
+          <h2>Piping Output to Explain</h2>
+          <p>You can pipe command output directly to Copilot explain for contextual help:</p>
+          <pre><code>cat error.log | gh copilot explain</code></pre>
+          <p>This is useful for understanding error messages or log output without copying and pasting manually.</p>
+
+          <nav class="step-navigation" aria-label="Step navigation">
+            <button class="step-nav-button step-nav-prev" aria-label="Previous step">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <line x1="19" y1="12" x2="5" y2="12"/>
+                <polyline points="12 19 5 12 12 5"/>
+              </svg>
+              Previous
+            </button>
+            <button class="step-nav-button primary step-nav-next" aria-label="Next step">
+              Next
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <line x1="5" y1="12" x2="19" y2="12"/>
+                <polyline points="12 5 19 12 12 19"/>
+              </svg>
+            </button>
+          </nav>
+        </section>
+
+        <!-- Step 5: Shell Aliases -->
+        <section id="step-5" class="step-section" aria-labelledby="step-5-title">
+          <header class="step-header">
+            <span class="step-number">Step 5 of 7</span>
+            <h1 id="step-5-title" class="step-title">Exercise 4: Shell Alias Setup</h1>
+            <p class="step-duration">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12 6 12 12 16 14"/>
+              </svg>
+              10 minutes
+            </p>
+          </header>
+
+          <p>Typing <code>gh copilot suggest</code> or <code>gh copilot explain</code> every time is verbose. Setting up short shell aliases — <code>ghcs</code> (GitHub Copilot Suggest) and <code>ghce</code> (GitHub Copilot Explain) — makes Copilot CLI feel like a natural part of your workflow.</p>
+
+          <h2>Automatic Alias Setup</h2>
+          <p>Copilot CLI can generate the alias configuration for your shell automatically:</p>
+          <pre><code>gh copilot alias -- bash</code></pre>
+          <p>Replace <code>bash</code> with your shell (<code>zsh</code>, <code>fish</code>, or <code>powershell</code>). The command prints shell-specific configuration to standard output.</p>
+
+          <h2>Bash / Zsh</h2>
+          <p>Add the aliases to your shell configuration file:</p>
+          <pre><code># Add to ~/.bashrc or ~/.zshrc
+eval "$(gh copilot alias -- bash)"</code></pre>
+          <p>For Zsh, replace <code>bash</code> with <code>zsh</code>:</p>
+          <pre><code># Add to ~/.zshrc
+eval "$(gh copilot alias -- zsh)"</code></pre>
+          <p>After editing the file, reload your shell configuration:</p>
+          <pre><code>source ~/.bashrc    # or ~/.zshrc</code></pre>
+
+          <h2>Fish Shell</h2>
+          <p>For Fish, add the configuration to your Fish config file:</p>
+          <pre><code># Run once to add to your Fish config
+gh copilot alias -- fish | source</code></pre>
+          <p>To make it permanent, add the following line to <code>~/.config/fish/config.fish</code>:</p>
+          <pre><code>gh copilot alias -- fish | source</code></pre>
+
+          <h2>PowerShell</h2>
+          <p>For PowerShell on Windows, add the following to your PowerShell profile (<code>$PROFILE</code>):</p>
+          <pre><code>Invoke-Expression (gh copilot alias -- powershell | Out-String)</code></pre>
+
+          <h2>Verify the Aliases Work</h2>
+          <p>Open a new terminal session (or reload your shell config) and test the aliases:</p>
+          <pre><code>ghcs "list all running Docker containers"
+ghce "docker ps -a --format 'table {{.Names}}\t{{.Status}}'"</code></pre>
+
+          <div class="info-box note">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="12" y1="16" x2="12" y2="12"/>
+              <line x1="12" y1="8" x2="12.01" y2="8"/>
+            </svg>
+            <div class="info-box-content">
+              <strong>What the Aliases Do</strong>
+              <p><code>ghcs</code> is a shorthand for <code>gh copilot suggest</code> and <code>ghce</code> is a shorthand for <code>gh copilot explain</code>. They accept exactly the same arguments as the full commands.</p>
+            </div>
+          </div>
+
+          <nav class="step-navigation" aria-label="Step navigation">
+            <button class="step-nav-button step-nav-prev" aria-label="Previous step">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <line x1="19" y1="12" x2="5" y2="12"/>
+                <polyline points="12 19 5 12 12 5"/>
+              </svg>
+              Previous
+            </button>
+            <button class="step-nav-button primary step-nav-next" aria-label="Next step">
+              Next
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <line x1="5" y1="12" x2="19" y2="12"/>
+                <polyline points="12 5 19 12 12 19"/>
+              </svg>
+            </button>
+          </nav>
+        </section>
+
+        <!-- Step 6: Challenge -->
+        <section id="step-6" class="step-section" aria-labelledby="step-6-title">
+          <header class="step-header">
+            <span class="step-number">Step 6 of 7</span>
+            <h1 id="step-6-title" class="step-title">Challenge: Real-World Tasks</h1>
+            <p class="step-duration">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12 6 12 12 16 14"/>
+              </svg>
+              15 minutes
+            </p>
+          </header>
+
+          <p>Now it is time to put everything together. Complete all three tasks below using <strong>only</strong> Copilot CLI suggestions — no manual searches or documentation. For each task, use <code>ghcs</code> (or <code>gh copilot suggest</code>) to generate the command, then use <code>ghce</code> (or <code>gh copilot explain</code>) to verify you understand what it does before running it.</p>
+
+          <h2>Task 1: Repository Hygiene</h2>
+          <p>Use Copilot CLI to find and remove all <code>.DS_Store</code> files from a Git repository (without deleting the files from disk, only from Git tracking).</p>
+          <ul>
+            <li>Hint: You will need a <code>git</code> command and a follow-up shell command</li>
+            <li>Use <code>ghcs --target git</code> for the Git-specific part</li>
+          </ul>
+
+          <div class="info-box note">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="12" y1="16" x2="12" y2="12"/>
+              <line x1="12" y1="8" x2="12.01" y2="8"/>
+            </svg>
+            <div class="info-box-content">
+              <strong>Example approach</strong>
+              <pre><code>ghcs --target git "remove all .DS_Store files from git tracking without deleting them from disk"</code></pre>
+            </div>
+          </div>
+
+          <h2>Task 2: Log Analysis</h2>
+          <p>Your application generates log files in <code>/var/log/app/</code>. Use Copilot CLI to:</p>
+          <ol>
+            <li>Count the number of <code>ERROR</code> lines across all <code>.log</code> files in that directory</li>
+            <li>Extract the 10 most recent unique error messages, sorted by frequency</li>
+          </ol>
+          <ul>
+            <li>Use <code>ghcs</code> for each sub-task separately</li>
+            <li>Use <code>ghce</code> to understand the pipeline before running it</li>
+          </ul>
+
+          <h2>Task 3: Docker Cleanup</h2>
+          <p>Use Copilot CLI to generate commands that:</p>
+          <ol>
+            <li>List all Docker containers that exited more than 24 hours ago</li>
+            <li>Remove all stopped containers, unused networks, dangling images, and build cache in a single command</li>
+          </ol>
+          <ul>
+            <li>Always use <code>ghce</code> to review destructive commands before executing them</li>
+          </ul>
+
+          <h2>Reflection</h2>
+          <p>After completing the three tasks, consider:</p>
+          <ul>
+            <li>How did using Copilot CLI compare to your usual workflow for looking up commands?</li>
+            <li>Which task benefited most from the <code>--target</code> flag?</li>
+            <li>Did any suggestion require refinement? What additional context helped?</li>
+          </ul>
+
+          <nav class="step-navigation" aria-label="Step navigation">
+            <button class="step-nav-button step-nav-prev" aria-label="Previous step">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <line x1="19" y1="12" x2="5" y2="12"/>
+                <polyline points="12 19 5 12 12 5"/>
+              </svg>
+              Previous
+            </button>
+            <button class="step-nav-button primary step-nav-next" aria-label="Next step">
+              Next
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <line x1="5" y1="12" x2="19" y2="12"/>
+                <polyline points="12 5 19 12 12 19"/>
+              </svg>
+            </button>
+          </nav>
+        </section>
+
+        <!-- Step 7: Tips & Best Practices -->
+        <section id="step-7" class="step-section" aria-labelledby="step-7-title">
+          <header class="step-header">
+            <span class="step-number">Step 7 of 7</span>
+            <h1 id="step-7-title" class="step-title">Tips &amp; Best Practices</h1>
+            <p class="step-duration">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12 6 12 12 16 14"/>
+              </svg>
+              5 minutes
+            </p>
+          </header>
+
+          <p>Make the most of GitHub Copilot CLI with these tips and best practices gathered from real-world use.</p>
+
+          <h2>Writing Effective Prompts</h2>
+          <ul>
+            <li><strong>Be specific</strong> — Include file types, time ranges, and output format in your description. <em>"list log files"</em> is less effective than <em>"list all .log files in /var/log modified in the last 24 hours, sorted by size"</em></li>
+            <li><strong>Mention the tool or ecosystem</strong> — Saying <em>"a git command to …"</em> or <em>"a Docker command to …"</em> helps Copilot choose the right tool</li>
+            <li><strong>Use the <code>--target</code> flag</strong> — Setting <code>--target git</code> or <code>--target gh</code> scopes suggestions and makes them more accurate</li>
+            <li><strong>Iterate with "Revise"</strong> — The first suggestion may not be exactly what you need. Use the interactive Revise option to add constraints or change the approach</li>
+          </ul>
+
+          <h2>Safety and Verification</h2>
+          <ul>
+            <li><strong>Always explain before running</strong> — Particularly for destructive commands (<code>rm -rf</code>, <code>docker system prune</code>, database drops). Use <code>ghce</code> to review what a command does before executing it</li>
+            <li><strong>Prefer dry-run flags</strong> — Many tools support <code>--dry-run</code> or <code>-n</code> flags. Ask Copilot to include them: <em>"list the files that would be deleted, without actually deleting them"</em></li>
+            <li><strong>Review multi-piped commands carefully</strong> — Long pipelines can have unintended side effects. Break them into stages if you are unsure</li>
+          </ul>
+
+          <h2>Integrating Into Your Workflow</h2>
+          <ul>
+            <li><strong>Pair with your shell history</strong> — After Copilot suggests a command and you run it successfully, it is added to your shell history for easy recall with the up arrow</li>
+            <li><strong>Use it for learning</strong> — Ask Copilot to suggest a command you already know, then use explain to see if there is a more efficient variant you were not aware of</li>
+            <li><strong>Combine with scripts</strong> — Use Copilot CLI interactively to prototype shell scripts, then copy the final commands into a <code>.sh</code> file</li>
+            <li><strong>Use the aliases</strong> — Once you have set up <code>ghcs</code> and <code>ghce</code>, using Copilot CLI becomes as natural as running any other command</li>
+          </ul>
+
+          <h2>Useful Reference Commands</h2>
+          <pre><code># Install / update
+gh extension install github/gh-copilot
+gh extension upgrade gh-copilot
+
+# Suggest a shell command
+gh copilot suggest "your task description"
+ghcs "your task description"                 # with alias
+
+# Suggest with explicit target
+gh copilot suggest --target git "your task"
+gh copilot suggest --target gh "your task"
+
+# Explain a command
+gh copilot explain "command to explain"
+ghce "command to explain"                    # with alias
+
+# Set up aliases (bash/zsh/fish/powershell)
+eval "$(gh copilot alias -- bash)"</code></pre>
+
+          <h2>Additional Resources</h2>
+          <ul>
+            <li><a href="https://cli.github.com/manual/gh_copilot" target="_blank" rel="noopener noreferrer">GitHub Copilot CLI Reference Manual</a></li>
+            <li><a href="https://docs.github.com/copilot/using-github-copilot/using-github-copilot-in-the-command-line" target="_blank" rel="noopener noreferrer">Using GitHub Copilot in the command line</a></li>
+            <li><a href="https://cli.github.com/" target="_blank" rel="noopener noreferrer">GitHub CLI — cli.github.com</a></li>
+            <li><a href="https://github.com/github/gh-copilot" target="_blank" rel="noopener noreferrer">gh-copilot extension on GitHub</a></li>
+          </ul>
+
+          <h2>🎉 Congratulations!</h2>
+          <p>You have completed the Copilot CLI workshop activity! You can now:</p>
+          <ul>
+            <li>Install and authenticate the GitHub Copilot CLI extension</li>
+            <li>Use <code>gh copilot suggest</code> to get AI-powered shell command suggestions</li>
+            <li>Use <code>gh copilot explain</code> to understand unfamiliar commands</li>
+            <li>Use short aliases (<code>ghcs</code> / <code>ghce</code>) for faster access</li>
+            <li>Apply Copilot CLI to real-world terminal tasks safely and effectively</li>
+          </ul>
+
+          <h3>Next Steps</h3>
+          <p>Continue your Path 3 journey by exploring the other extended capabilities:</p>
+          <ul>
+            <li><a href="extended-capabilities.html#step-2">Copilot SDK</a> — Build your own Copilot extensions</li>
+            <li><a href="extended-capabilities.html#step-3">Agent Skills</a> — Define reusable Copilot behaviors</li>
+            <li><a href="extended-capabilities.html#step-4">Sub-Agents</a> — Coordinate multi-agent workflows</li>
+            <li><a href="extended-capabilities.html#step-5">Copilot Memory</a> — Persist context across conversations</li>
+          </ul>
+
+          <nav class="step-navigation" aria-label="Step navigation">
+            <button class="step-nav-button step-nav-prev" aria-label="Previous step">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <line x1="19" y1="12" x2="5" y2="12"/>
+                <polyline points="12 19 5 12 12 5"/>
+              </svg>
+              Previous
+            </button>
+            <a href="extended-capabilities.html" class="step-nav-button primary">
+              Back to Path 3
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <line x1="5" y1="12" x2="19" y2="12"/>
+                <polyline points="12 5 19 12 12 19"/>
+              </svg>
+            </a>
+          </nav>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- Mobile sidebar toggle button -->
+  <button id="sidebar-toggle" class="sidebar-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+      <line x1="3" y1="12" x2="21" y2="12"/>
+      <line x1="3" y1="6" x2="21" y2="6"/>
+      <line x1="3" y1="18" x2="21" y2="18"/>
+    </svg>
+  </button>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
