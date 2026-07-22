@@ -1,0 +1,31 @@
+name: 📖 Documentation Update
+description: Report typos, missing information, or suggest new guides.
+labels:
+  - documentation
+body:
+  - type: input
+    id: target-section
+    attributes:
+      label: Target Section
+      description: Provide the link or path to the exact file or section that needs updating.
+      placeholder: "e.g. docs/getting-started.md or https://example.com/docs/setup"
+    validations:
+      required: true
+
+  - type: textarea
+    id: the-problem
+    attributes:
+      label: The Problem
+      description: Clarify what is missing, wrong, or outdated in the current documentation.
+      placeholder: The current documentation is missing... / The following information is incorrect...
+    validations:
+      required: true
+
+  - type: textarea
+    id: suggested-changes
+    attributes:
+      label: Suggested Changes
+      description: Provide the text, format, or structure that should replace or supplement the current content.
+      placeholder: The documentation should say... / Add a section explaining...
+    validations:
+      required: true

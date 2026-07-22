@@ -1,0 +1,66 @@
+name: 🐛 Bug Report
+description: Create a report to help us fix broken functionality, errors, or crashes.
+labels:
+  - bug
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: A clear and concise description of the bug.
+      placeholder: Describe the bug you encountered...
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps-to-reproduce
+    attributes:
+      label: Steps to Reproduce
+      description: Provide numbered steps to reliably reproduce the issue.
+      placeholder: |
+        1. Go to '...'
+        2. Click on '...'
+        3. Scroll down to '...'
+        4. See error
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: Expected Behavior
+      description: A clear and concise description of what you expected to happen.
+      placeholder: I expected...
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual-behavior
+    attributes:
+      label: Actual Behavior
+      description: A clear and concise description of what actually happened. Include any error messages or logs.
+      placeholder: Instead, what happened was... (paste error logs here if applicable)
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment Details
+      description: Provide details about your environment to help reproduce the issue.
+      placeholder: |
+        - OS: [e.g. macOS 14.0, Windows 11, Ubuntu 22.04]
+        - Browser: [e.g. Chrome 120, Firefox 121] (if applicable)
+        - Application Version: [e.g. 1.2.3]
+        - Runtime/SDK: [e.g. Node.js 20.x, Python 3.11]
+    validations:
+      required: true
+
+  - type: textarea
+    id: screenshots-logs
+    attributes:
+      label: Screenshots / Logs
+      description: Add screenshots, links, or paste stack traces to help explain the problem.
+      placeholder: Drag and drop screenshots here, or paste stack traces and relevant log output...
+    validations:
+      required: false
