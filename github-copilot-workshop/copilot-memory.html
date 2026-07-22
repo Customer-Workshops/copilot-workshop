@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Learn how to use GitHub Copilot's memory system to persist preferences and project context across conversations in VS Code.">
+  <meta name="theme-color" content="#6C21D9">
+  <title>Copilot Memory - GitHub Copilot Workshop</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', var(--font-family); }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="site-header" role="banner">
+    <div class="header-brand">
+      <svg class="header-logo" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+      </svg>
+      <a href="../index.html" class="header-title">GitHub Copilot Workshop</a>
+    </div>
+    <nav class="header-nav" aria-label="Main navigation">
+      <a href="../index.html" class="header-nav-link">Home</a>
+      <a href="start-coding.html" class="header-nav-link">Start Coding with AI</a>
+      <a href="pro-features.html" class="header-nav-link">Copilot Pro Features</a>
+      <a href="extended-capabilities.html" class="header-nav-link active">Extended Capabilities</a>
+      <button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark mode">
+        <svg class="theme-toggle-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span class="theme-toggle-text">Dark</span>
+      </button>
+    </nav>
+  </header>
+
+  <!-- Workshop Layout -->
+  <div class="workshop-layout">
+    <!-- Sidebar Navigation -->
+    <aside id="workshop-sidebar" class="workshop-sidebar" role="navigation" aria-label="Workshop steps">
+      <div class="sidebar-header">
+        <a href="extended-capabilities.html" class="sidebar-back">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <line x1="19" y1="12" x2="5" y2="12"/>
+            <polyline points="12 19 5 12 12 5"/>
+          </svg>
+          Back to Path 3
+        </a>
+        <h2 class="sidebar-title">Copilot Memory</h2>
+      </div>
+
+      <nav class="sidebar-nav">
+        <ol class="sidebar-nav-list">
+          <li class="sidebar-nav-item">
+            <a href="#step-1" class="sidebar-nav-link active">
+              <span class="sidebar-nav-number">1</span>
+              <span class="sidebar-nav-text">Introduction</span>
+            </a>
+          </li>
+          <li class="sidebar-nav-item">
+            <a href="#step-2" class="sidebar-nav-link">
+              <span class="sidebar-nav-number">2</span>
+              <span class="sidebar-nav-text">Memory Scopes</span>
+            </a>
+          </li>
+          <li class="sidebar-nav-item">
+            <a href="#step-3" class="sidebar-nav-link">
+              <span class="sidebar-nav-number">3</span>
+              <span class="sidebar-nav-text">User Memory</span>
+            </a>
+          </li>
+          <li class="sidebar-nav-item">
+            <a href="#step-4" class="sidebar-nav-link">
+              <span class="sidebar-nav-number">4</span>
+              <span class="sidebar-nav-text">Session Memory</span>
+            </a>
+          </li>
+          <li class="sidebar-nav-item">
+            <a href="#step-5" class="sidebar-nav-link">
+              <span class="sidebar-nav-number">5</span>
+              <span class="sidebar-nav-text">Repository Memory</span>
+            </a>
+          </li>
+          <li class="sidebar-nav-item">
+            <a href="#step-6" class="sidebar-nav-link">
+              <span class="sidebar-nav-number">6</span>
+              <span class="sidebar-nav-text">Challenge</span>
+            </a>
+          </li>
+          <li class="sidebar-nav-item">
+            <a href="#step-7" class="sidebar-nav-link">
+              <span class="sidebar-nav-number">7</span>
+              <span class="sidebar-nav-text">Best Practices</span>
+            </a>
+          </li>
+        </ol>
+      </nav>
+
+      <div class="progress-container">
+        <div class="progress-label">
+          <span>Progress</span>
+          <span><span class="progress-current">1</span> / <span class="progress-total">7</span></span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" style="width: 14%;"></div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Sidebar overlay for mobile -->
+    <div id="sidebar-overlay" class="sidebar-overlay" aria-hidden="true"></div>
+
+    <!-- Main Content -->
+    <main class="workshop-content" role="main">
+      <div class="workshop-content-inner">
+
+        <!-- Step 1: Introduction -->
+        <section id="step-1" class="step-section active" aria-labelledby="step-1-title">
+          <header class="step-header">
+            <span class="step-number">Step 1 of 7</span>
+            <h1 id="step-1-title" class="step-title">Introduction to Copilot Memory</h1>
+            <p class="step-duration">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12 6 12 12 16 14"/>
+              </svg>
+              5 minutes
+            </p>
+          </header>
+
+          <p>GitHub Copilot's memory system lets you store preferences, project context, and in-progress work so that Copilot stays consistent and context-aware — across different conversations and across your entire team.</p>
+
+          <h2>Why Memory Matters</h2>
+          <p>By default, every Copilot Chat conversation starts fresh. There is no recollection of your preferred coding style, the framework your project uses, or the task you were working on yesterday. This statelessness is fine for quick one-off questions, but it becomes a friction point in longer-running workflows:</p>
+          <ul>
+            <li>You re-explain your tech stack at the start of every chat</li>
+            <li>Copilot suggests patterns that conflict with your team's conventions</li>
+            <li>Context from a long earlier conversation is lost when you close VS Code</li>
+            <li>New team members get different suggestions than experienced ones</li>
+          </ul>
+          <p>Copilot Memory solves this by giving you markdown files that Copilot reads automatically. You write your preferences and context once; Copilot applies them every time.</p>
+
+          <h2>How Memory Works</h2>
+          <p>Copilot memory is stored in plain markdown (<code>.md</code>) files. Copilot reads these files at the start of each chat and uses their contents as additional context. Because the files are plain text, you can edit them directly, commit them to version control, and share them with your team.</p>
+
+          <div class="info-box note">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="12" y1="16" x2="12" y2="12"/>
+              <line x1="12" y1="8" x2="12.01" y2="8"/>
+            </svg>
+            <div class="info-box-content">
+              <strong>Memory files are just Markdown</strong>
+              <p>There is no special syntax or schema to learn. Copilot reads the files as natural language context. Use headings, bullet lists, and code blocks to organise information in whatever way makes sense for your team.</p>
+            </div>
+          </div>
+
+          <h2>Learning Objectives</h2>
+          <p>By the end of this workshop activity you will be able to:</p>
+          <ul>
+            <li>Explain the three memory scopes and when to use each one</li>
+            <li>Create and update user memory to persist personal coding preferences</li>
+            <li>Use session memory to track multi-step tasks within a single conversation</li>
+            <li>Create repository memory that captures project conventions shared across a team</li>
+            <li>Design a memory strategy that keeps files concise and actionable</li>
+          </ul>
+
+          <h2>Prerequisites</h2>
+
+          <div class="info-box warning">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+              <line x1="12" y1="9" x2="12" y2="13"/>
+              <line x1="12" y1="17" x2="12.01" y2="17"/>
+            </svg>
+            <div class="info-box-content">
+              <strong>Before you begin, make sure you have:</strong>
+              <ul>
+                <li><strong>Visual Studio Code</strong> — version 1.90 or later. <a href="https://code.visualstudio.com/" target="_blank" rel="noopener noreferrer">Download from code.visualstudio.com</a></li>
+                <li><strong>GitHub Copilot Chat extension</strong> — installed and signed in with a Copilot-enabled account</li>
+                <li><strong>Copilot memory enabled</strong> — open VS Code Settings (<code>Ctrl+,</code> / <code>Cmd+,</code>), search for <strong>Copilot: Memory</strong>, and ensure the setting is turned on</li>
+                <li><strong>A local workspace folder</strong> open in VS Code — any existing project or an empty folder works</li>
+              </ul>
+            </div>
+          </div>
+
+          <p>To verify that memory is active, open Copilot Chat and type:</p>
+          <pre><code>What do you know about my coding preferences?</code></pre>
+          <p>If memory is enabled but no memory files exist yet, Copilot will say it has no stored preferences — that is the expected starting state.</p>
+
+          <nav class="step-navigation" aria-label="Step navigation">
+            <button class="step-nav-button step-nav-prev" disabled aria-label="Previous step">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <line x1="19" y1="12" x2="5" y2="12"/>
+                <polyline points="12 19 5 12 12 5"/>
+              </svg>
+              Previous
+            </button>
+            <button class="step-nav-button primary step-nav-next" aria-label="Next step">
+              Next
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <line x1="5" y1="12" x2="19" y2="12"/>
+                <polyline points="12 5 19 12 12 19"/>
+              </svg>
+            </button>
+          </nav>
+        </section>
+
+        <!-- Step 2: Memory Scopes -->
+        <section id="step-2" class="step-section" aria-labelledby="step-2-title">
+          <header class="step-header">
+            <span class="step-number">Step 2 of 7</span>
+            <h1 id="step-2-title" class="step-title">Exercise 1: Explore the Three Memory Scopes</h1>
+            <p class="step-duration">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12 6 12 12 16 14"/>
+              </svg>
+              10 minutes
+            </p>
+          </header>
+
+          <p>Copilot memory is organised into three scopes, each serving a different purpose and persisting for a different length of time.</p>
+
+          <h2>The Three Memory Scopes</h2>
+
+          <div class="info-box note">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="12" y1="16" x2="12" y2="12"/>
+              <line x1="12" y1="8" x2="12.01" y2="8"/>
+            </svg>
+            <div class="info-box-content">
+              <strong>Memory file locations</strong>
+              <ul>
+                <li><strong>User scope</strong> — <code>~/.vscode/copilot/memories/</code> (macOS/Linux) or <code>%APPDATA%\Code\User\copilot\memories\</code> (Windows). Applies to all your VS Code sessions across all projects.</li>
+                <li><strong>Session scope</strong> — <code>.github/copilot/memories/session/</code> inside your workspace. Intended to track in-progress work within the current task.</li>
+                <li><strong>Repository scope</strong> — <code>.github/copilot/memories/</code> inside your workspace. Committed to version control and shared with the whole team.</li>
+              </ul>
+            </div>
+          </div>
+
+          <h2>Scope Comparison</h2>
+          <table style="width:100%;border-collapse:collapse;margin:1rem 0;">
+            <thead>
+              <tr style="background:var(--color-surface-secondary,#f6f8fa);">
+                <th style="text-align:left;padding:0.5rem 0.75rem;border:1px solid var(--color-border,#d0d7de);">Scope</th>
+                <th style="text-align:left;padding:0.5rem 0.75rem;border:1px solid var(--color-border,#d0d7de);">Location</th>
+                <th style="text-align:left;padding:0.5rem 0.75rem;border:1px solid var(--color-border,#d0d7de);">Applies to</th>
+                <th style="text-align:left;padding:0.5rem 0.75rem;border:1px solid var(--color-border,#d0d7de);">Shared?</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="padding:0.5rem 0.75rem;border:1px solid var(--color-border,#d0d7de);"><strong>User</strong></td>
+                <td style="padding:0.5rem 0.75rem;border:1px solid var(--color-border,#d0d7de);"><code>~/…/memories/</code></td>
+                <td style="padding:0.5rem 0.75rem;border:1px solid var(--color-border,#d0d7de);">All projects, all sessions</td>
+                <td style="padding:0.5rem 0.75rem;border:1px solid var(--color-border,#d0d7de);">No — personal only</td>
+              </tr>
+              <tr style="background:var(--color-surface-secondary,#f6f8fa);">
+                <td style="padding:0.5rem 0.75rem;border:1px solid var(--color-border,#d0d7de);"><strong>Session</strong></td>
+                <td style="padding:0.5rem 0.75rem;border:1px solid var(--color-border,#d0d7de);"><code>.github/copilot/memories/session/</code></td>
+                <td style="padding:0.5rem 0.75rem;border:1px solid var(--color-border,#d0d7de);">Current task in progress</td>
+                <td style="padding:0.5rem 0.75rem;border:1px solid var(--color-border,#d0d7de);">Optional (add to .gitignore)</td>
+              </tr>
+              <tr>
+                <td style="padding:0.5rem 0.75rem;border:1px solid var(--color-border,#d0d7de);"><strong>Repository</strong></td>
+                <td style="padding:0.5rem 0.75rem;border:1px solid var(--color-border,#d0d7de);"><code>.github/copilot/memories/</code></td>
+                <td style="padding:0.5rem 0.75rem;border:1px solid var(--color-border,#d0d7de);">Entire codebase, all contributors</td>
+                <td style="padding:0.5rem 0.75rem;border:1px solid var(--color-border,#d0d7de);">Yes — committed to git</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h2>Exercise: Inspect the Memory Directories</h2>
+          <ol>
+            <li>Open a terminal in VS Code (<strong>Terminal → New Terminal</strong>).</li>
+            <li>Check whether any user-scope memory files already exist:
+              <pre><code># macOS / Linux
+ls ~/.vscode/copilot/memories/ 2>/dev/null || echo "No user memory files yet"
+
+# Windows (PowerShell)
+Get-ChildItem "$env:APPDATA\Code\User\copilot\memories" -ErrorAction SilentlyContinue</code></pre>
+            </li>
+            <li>Check whether repository-scope directories exist in your current workspace:
+              <pre><code>ls .github/copilot/memories/ 2>/dev/null || echo "No repository memory files yet"</code></pre>
+            </li>
+            <li>In Copilot Chat, ask:
+              <pre><code>What memory files do you currently have access to?</code></pre>
+              Observe which files Copilot lists. If no files exist yet, that is expected — you will create them in the next exercises.
+            </li>
+          </ol>
+
+          <div class="info-box note">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="12" y1="16" x2="12" y2="12"/>
+              <line x1="12" y1="8" x2="12.01" y2="8"/>
+            </svg>
+            <div class="info-box-content">
+              <strong>Tip: Ask Copilot to help manage memory</strong>
+              <p>You can ask Copilot to create or update memory files on your behalf. For example: <em>"Please save this preference to my user memory"</em>. Copilot will write or update the appropriate file for you.</p>
+            </div>
+          </div>
+
+          <nav class="step-navigation" aria-label="Step navigation">
+            <button class="step-nav-button step-nav-prev" aria-label="Previous step">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <line x1="19" y1="12" x2="5" y2="12"/>
+                <polyline points="12 19 5 12 12 5"/>
+              </svg>
+              Previous
+            </button>
+            <button class="step-nav-button primary step-nav-next" aria-label="Next step">
+              Next
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <line x1="5" y1="12" x2="19" y2="12"/>
+                <polyline points="12 5 19 12 12 19"/>
+              </svg>
+            </button>
+          </nav>
+        </section>
+
+        <!-- Step 3: User Memory -->
+        <section id="step-3" class="step-section" aria-labelledby="step-3-title">
+          <header class="step-header">
+            <span class="step-number">Step 3 of 7</span>
+            <h1 id="step-3-title" class="step-title">Exercise 2: Save a Coding Preference to User Memory</h1>
+            <p class="step-duration">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12 6 12 12 16 14"/>
+              </svg>
+              15 minutes
+            </p>
+          </header>
+
+          <p>User memory stores your personal preferences — coding style, language choices, documentation habits — and applies them across every project you work on. Changes you make here influence every future Copilot Chat response in every workspace.</p>
+
+          <h2>Part A: Create Your User Memory File</h2>
+          <p>Create a new markdown file at the user-scope location:</p>
+          <pre><code># macOS / Linux
+mkdir -p ~/.vscode/copilot/memories
+code ~/.vscode/copilot/memories/preferences.md
+
+# Windows (PowerShell)
+New-Item -ItemType Directory -Force "$env:APPDATA\Code\User\copilot\memories"
+code "$env:APPDATA\Code\User\copilot\memories\preferences.md"</code></pre>
+
+          <p>Add a few concrete preferences. Here is a starter template — customise it to match your real preferences:</p>
+          <pre><code># My Copilot Preferences
+
+## Coding Style
+- I prefer TypeScript over JavaScript for all new projects
+- Use `const` and `let` instead of `var`
+- Always add explicit return types to functions
+- Use 2-space indentation
+
+## Testing Preferences
+- Use Jest as the test framework
+- Follow the AAA pattern: Arrange, Act, Assert
+- Write tests in `__tests__` directories alongside source files
+
+## Communication Style
+- Explain the "why" behind suggestions, not just the "what"
+- Keep responses concise — use bullet points for lists of steps
+- If multiple approaches exist, briefly compare the trade-offs</code></pre>
+
+          <p>Save the file.</p>
+
+          <h2>Part B: Verify the Preference Takes Effect</h2>
+          <ol>
+            <li>Open a new Copilot Chat conversation (<strong>Ctrl+Shift+I</strong> / <strong>Cmd+Shift+I</strong>).</li>
+            <li>Without mentioning TypeScript, ask Copilot to generate a simple utility function:
+              <pre><code>Write a function that takes an array of numbers and returns the sum.</code></pre>
+            </li>
+            <li>Observe whether Copilot uses TypeScript with explicit return types, matching your saved preference.</li>
+            <li>Now ask:
+              <pre><code>What do you know about my coding style preferences?</code></pre>
+              Copilot should describe the preferences you saved in the memory file.
+            </li>
+          </ol>
+
+          <div class="info-box note">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="12" y1="16" x2="12" y2="12"/>
+              <line x1="12" y1="8" x2="12.01" y2="8"/>
+            </svg>
+            <div class="info-box-content">
+              <strong>Reflection questions</strong>
+              <ul>
+                <li>Did Copilot apply your language preference without being asked explicitly?</li>
+                <li>Were there any preferences Copilot ignored or interpreted differently than you expected?</li>
+                <li>Which preferences had the biggest impact on the quality of the suggestion?</li>
+              </ul>
+            </div>
+          </div>
+
+          <h2>Part C: Update a Preference</h2>
+          <p>Memory files are just text — edit them at any time. Try changing one preference:</p>
+          <ol>
+            <li>Open your <code>preferences.md</code> file and add a new section:
+              <pre><code>## Error Handling
+- Always use explicit error handling — never swallow exceptions silently
+- Prefer returning `Result` types over throwing exceptions in library code
+- Log errors with enough context to reproduce the problem</code></pre>
+            </li>
+            <li>Save the file, then open a new chat and ask:
+              <pre><code>Write a function that reads a file and returns its contents as a string.</code></pre>
+            </li>
+            <li>Verify that Copilot includes explicit error handling in the generated code.</li>
+          </ol>
+
+          <h2>Sample User Memory File</h2>
+          <p>A complete example is available in the workshop repository:</p>
+          <a href="examples/memories/user-preferences.md" class="button button-secondary" style="display:inline-flex;align-items:center;gap:0.5rem;margin:1rem 0;" target="_blank" rel="noopener noreferrer">
+            View sample user-preferences.md
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/>
+              <polyline points="15 3 21 3 21 9"/>
+              <line x1="10" y1="14" x2="21" y2="3"/>
+            </svg>
+          </a>
+
+          <nav class="step-navigation" aria-label="Step navigation">
+            <button class="step-nav-button step-nav-prev" aria-label="Previous step">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <line x1="19" y1="12" x2="5" y2="12"/>
+                <polyline points="12 19 5 12 12 5"/>
+              </svg>
+              Previous
+            </button>
+            <button class="step-nav-button primary step-nav-next" aria-label="Next step">
+              Next
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <line x1="5" y1="12" x2="19" y2="12"/>
+                <polyline points="12 5 19 12 12 19"/>
+              </svg>
+            </button>
+          </nav>
+        </section>
+
+        <!-- Step 4: Session Memory -->
+        <section id="step-4" class="step-section" aria-labelledby="step-4-title">
+          <header class="step-header">
+            <span class="step-number">Step 4 of 7</span>
+            <h1 id="step-4-title" class="step-title">Exercise 3: Track a Multi-Step Task with Session Memory</h1>
+            <p class="step-duration">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12 6 12 12 16 14"/>
+              </svg>
+              20 minutes
+            </p>
+          </header>
+
+          <p>Session memory is designed for tasks that span multiple prompts. Instead of re-explaining your progress at the start of every chat turn, you write a session file that Copilot reads automatically and keeps its context anchored to where you left off.</p>
+
+          <h2>Why Session Memory?</h2>
+          <p>Complex development tasks — refactoring a service, implementing a feature end-to-end, debugging a tricky issue — often require many back-and-forth exchanges with Copilot. Without session memory you have to:</p>
+          <ul>
+            <li>Paste the same background context at the start of every new chat</li>
+            <li>Remember which decisions were already made and re-explain them</li>
+            <li>Risk losing the thread of a long investigation when you close VS Code</li>
+          </ul>
+          <p>A session file acts as a living checklist and decision log that both you and Copilot can read and update throughout the task.</p>
+
+          <h2>Part A: Set Up a Session File</h2>
+          <ol>
+            <li>Create the session memory directory in your workspace:
+              <pre><code>mkdir -p .github/copilot/memories/session</code></pre>
+            </li>
+            <li>Create a new session file for a realistic task — for example, refactoring a service to use the repository pattern:
+              <pre><code>code .github/copilot/memories/session/current-task.md</code></pre>
+            </li>
+            <li>Paste in the following starter template and fill in the details for your actual task:
+              <pre><code># Session Context: [Your Task Name]
+
+## Current Task
+[One or two sentences describing what you are trying to accomplish.]
+
+## Progress So Far
+- [x] Completed step
+- [ ] Next step
+- [ ] Future step
+
+## Key Decisions Made
+- [Decision 1 and the reasoning behind it]
+- [Decision 2 and the reasoning behind it]
+
+## Files Modified
+- `path/to/file.ts` — brief description of change
+
+## Files Still To Update
+- `path/to/other-file.ts` — brief description of planned change
+
+## Notes
+- Any important constraints, gotchas, or context Copilot needs to know</code></pre>
+            </li>
+            <li>Save the file.</li>
+          </ol>
+
+          <h2>Part B: Use the Session File Across Multiple Prompts</h2>
+          <p>Work through a realistic multi-step task using the session file as a shared scratchpad:</p>
+          <ol>
+            <li>Open Copilot Chat and start with:
+              <pre><code>Read my session memory file and summarise where I am in my current task.</code></pre>
+              Verify that Copilot accurately describes your current progress.
+            </li>
+            <li>Ask Copilot to help with the next step:
+              <pre><code>Help me implement the next step in my current task.</code></pre>
+            </li>
+            <li>After completing a step, ask Copilot to update the session file:
+              <pre><code>Update my session memory to mark "[step name]" as complete and add any key decisions we made.</code></pre>
+            </li>
+            <li>Close the chat, open a brand-new conversation, and ask:
+              <pre><code>What was I working on? What are the remaining steps?</code></pre>
+              Copilot should be able to resume from the updated session file without you re-explaining anything.
+            </li>
+          </ol>
+
+          <div class="info-box note">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="12" y1="16" x2="12" y2="12"/>
+              <line x1="12" y1="8" x2="12.01" y2="8"/>
+            </svg>
+            <div class="info-box-content">
+              <strong>Tip: Keep session files out of version control</strong>
+              <p>Session files track your personal in-progress state and are typically not useful to other contributors. Add the session directory to <code>.gitignore</code> to avoid committing them:</p>
+              <pre><code>.github/copilot/memories/session/</code></pre>
+            </div>
+          </div>
+
+          <h2>Sample Session File</h2>
+          <p>A worked example is available in the workshop repository:</p>
+          <a href="examples/memories/session/current-task.md" class="button button-secondary" style="display:inline-flex;align-items:center;gap:0.5rem;margin:1rem 0;" target="_blank" rel="noopener noreferrer">
+            View sample session/current-task.md
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/>
+              <polyline points="15 3 21 3 21 9"/>
+              <line x1="10" y1="14" x2="21" y2="3"/>
+            </svg>
+          </a>
+
+          <nav class="step-navigation" aria-label="Step navigation">
+            <button class="step-nav-button step-nav-prev" aria-label="Previous step">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <line x1="19" y1="12" x2="5" y2="12"/>
+                <polyline points="12 19 5 12 12 5"/>
+              </svg>
+              Previous
+            </button>
+            <button class="step-nav-button primary step-nav-next" aria-label="Next step">
+              Next
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <line x1="5" y1="12" x2="19" y2="12"/>
+                <polyline points="12 5 19 12 12 19"/>
+              </svg>
+            </button>
+          </nav>
+        </section>
+
+        <!-- Step 5: Repository Memory -->
+        <section id="step-5" class="step-section" aria-labelledby="step-5-title">
+          <header class="step-header">
+            <span class="step-number">Step 5 of 7</span>
+            <h1 id="step-5-title" class="step-title">Exercise 4: Create Repository Memory for Project Conventions</h1>
+            <p class="step-duration">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12 6 12 12 16 14"/>
+              </svg>
+              20 minutes
+            </p>
+          </header>
+
+          <p>Repository memory is committed to version control and shared with everyone who works on the project. It gives Copilot a consistent understanding of your codebase — naming conventions, technology stack, build commands, and team norms — so every contributor gets context-aware suggestions from day one.</p>
+
+          <h2>What to Capture in Repository Memory</h2>
+          <ul>
+            <li><strong>Technology stack</strong> — language versions, frameworks, libraries the team has standardised on</li>
+            <li><strong>Naming conventions</strong> — file names, class names, variable names, database tables, API routes</li>
+            <li><strong>Project structure</strong> — where different types of code live (controllers, services, models, tests)</li>
+            <li><strong>Build and test commands</strong> — how to build, run, lint, and test the project locally</li>
+            <li><strong>Coding standards</strong> — patterns the team follows (e.g., always use the Result pattern for errors)</li>
+            <li><strong>Git conventions</strong> — branch naming, commit message format, PR review requirements</li>
+          </ul>
+
+          <h2>Part A: Create the Repository Memory File</h2>
+          <ol>
+            <li>Create the repository memory directory:
+              <pre><code>mkdir -p .github/copilot/memories</code></pre>
+            </li>
+            <li>Create a conventions file:
+              <pre><code>code .github/copilot/memories/conventions.md</code></pre>
+            </li>
+            <li>Document your project's conventions. Here is a template to get you started:
+              <pre><code># Repository Conventions
+
+## Project Overview
+[One paragraph describing the project and its purpose.]
+
+## Technology Stack
+- **Runtime**: [e.g., Node.js 20 LTS]
+- **Language**: [e.g., TypeScript 5.x with strict mode]
+- **Framework**: [e.g., Express 4]
+- **Database**: [e.g., PostgreSQL 16 with `pg` driver]
+- **Testing**: [e.g., Jest + React Testing Library]
+- **Linting**: [e.g., ESLint with @typescript-eslint]
+
+## Naming Conventions
+- **Files**: `kebab-case.ts`
+- **Classes**: `PascalCase`
+- **Functions and variables**: `camelCase`
+- **Constants**: `SCREAMING_SNAKE_CASE`
+- **Database tables**: `snake_case`
+- **API routes**: `kebab-case` (e.g., `/api/user-profile`)
+
+## Project Structure
+[Describe the directory layout and what each folder contains.]
+
+## Build Commands
+\`\`\`bash
+npm run build   # compile TypeScript
+npm run dev     # start with hot-reload
+npm test        # run all tests
+npm run lint    # lint all files
+\`\`\`
+
+## Coding Standards
+- [Standard 1]
+- [Standard 2]
+
+## Git Conventions
+- Branch naming: `feature/`, `fix/`, `chore/`
+- Commit messages: imperative mood, present tense
+- PRs require one approval and passing CI</code></pre>
+            </li>
+            <li>Fill in the template with your project's actual details, then save the file.</li>
+          </ol>
+
+          <h2>Part B: Verify Repository Memory Is Applied</h2>
+          <ol>
+            <li>Open Copilot Chat and ask:
+              <pre><code>What are the naming conventions for this project?</code></pre>
+              Copilot should describe the conventions you just documented.
+            </li>
+            <li>Ask Copilot to generate a new file using the project conventions:
+              <pre><code>Create a new service class for managing user notifications, following our project conventions.</code></pre>
+              Check whether the generated file name, class name, and structure match your documented conventions.
+            </li>
+            <li>Ask about build commands:
+              <pre><code>How do I run the tests for this project?</code></pre>
+              Copilot should answer using the commands from your conventions file.
+            </li>
+          </ol>
+
+          <h2>Part C: Commit the Memory File</h2>
+          <p>Repository memory is only useful when it is committed to version control:</p>
+          <pre><code>git add .github/copilot/memories/conventions.md
+git commit -m "Add Copilot repository memory with project conventions"
+git push</code></pre>
+          <p>Once merged, every contributor who opens this repository will have Copilot automatically reading the conventions file — no manual setup required.</p>
+
+          <h2>Sample Repository Memory File</h2>
+          <p>A complete example is available in the workshop repository:</p>
+          <a href="examples/memories/repo/conventions.md" class="button button-secondary" style="display:inline-flex;align-items:center;gap:0.5rem;margin:1rem 0;" target="_blank" rel="noopener noreferrer">
+            View sample repo/conventions.md
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/>
+              <polyline points="15 3 21 3 21 9"/>
+              <line x1="10" y1="14" x2="21" y2="3"/>
+            </svg>
+          </a>
+
+          <nav class="step-navigation" aria-label="Step navigation">
+            <button class="step-nav-button step-nav-prev" aria-label="Previous step">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <line x1="19" y1="12" x2="5" y2="12"/>
+                <polyline points="12 19 5 12 12 5"/>
+              </svg>
+              Previous
+            </button>
+            <button class="step-nav-button primary step-nav-next" aria-label="Next step">
+              Next
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <line x1="5" y1="12" x2="19" y2="12"/>
+                <polyline points="12 5 19 12 12 19"/>
+              </svg>
+            </button>
+          </nav>
+        </section>
+
+        <!-- Step 6: Challenge -->
+        <section id="step-6" class="step-section" aria-labelledby="step-6-title">
+          <header class="step-header">
+            <span class="step-number">Step 6 of 7</span>
+            <h1 id="step-6-title" class="step-title">Challenge: Design Your Personal Memory Schema</h1>
+            <p class="step-duration">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12 6 12 12 16 14"/>
+              </svg>
+              20 minutes
+            </p>
+          </header>
+
+          <p>Now that you have worked with all three memory scopes, design a memory strategy tailored to your day-to-day development workflow. The goal is a schema that is practical, maintainable, and genuinely improves the quality of Copilot's suggestions over time.</p>
+
+          <h2>Challenge Brief</h2>
+          <p>Design a complete memory schema — a set of memory files across the appropriate scopes — for <strong>one of the following scenarios</strong> (or your own real project):</p>
+
+          <div class="info-box note">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="12" y1="16" x2="12" y2="12"/>
+              <line x1="12" y1="8" x2="12.01" y2="8"/>
+            </svg>
+            <div class="info-box-content">
+              <strong>Choose a scenario</strong>
+              <ul>
+                <li><strong>Scenario A — Solo developer</strong>: You work across several personal projects in different languages. Design a user memory schema that applies useful defaults everywhere while letting each project override them.</li>
+                <li><strong>Scenario B — Team project</strong>: You are a tech lead on a team of five engineers. Design a repository memory schema that onboards new contributors and keeps Copilot consistent across the team.</li>
+                <li><strong>Scenario C — Long-running migration</strong>: You are migrating a large codebase from REST to GraphQL. Design a session memory schema that tracks migration progress across weeks of work.</li>
+              </ul>
+            </div>
+          </div>
+
+          <h2>Your Design Should Answer</h2>
+          <ol>
+            <li><strong>What files will you create?</strong> — List each file and which scope it belongs to.</li>
+            <li><strong>What content goes in each file?</strong> — Write the actual content, not just a description of it.</li>
+            <li><strong>How will you keep the files up to date?</strong> — What is your process for updating memory as the project evolves?</li>
+            <li><strong>What will you deliberately leave out?</strong> — Identify one or two things that might be tempting to add but would make the files too long or too noisy.</li>
+          </ol>
+
+          <h2>Implementation Steps</h2>
+          <ol>
+            <li>Draft the memory files for your chosen scenario. Create the actual files in the right locations — do not just plan them.</li>
+            <li>Open Copilot Chat and ask it a question that the memory should answer without prompting:
+              <pre><code>What testing framework should I use for a new module in this project?</code></pre>
+            </li>
+            <li>If the answer is wrong or incomplete, refine the memory file and try again.</li>
+            <li>Share your schema with a peer and ask them to review it. Would it help them get productive on the project quickly?</li>
+          </ol>
+
+          <h2>Reflection</h2>
+          <p>After completing the challenge, consider:</p>
+          <ul>
+            <li>Which scope did you use most? Was that what you expected?</li>
+            <li>What was the hardest information to capture clearly in a memory file?</li>
+            <li>How would you introduce memory files to your team without adding maintenance overhead?</li>
+          </ul>
+
+          <nav class="step-navigation" aria-label="Step navigation">
+            <button class="step-nav-button step-nav-prev" aria-label="Previous step">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <line x1="19" y1="12" x2="5" y2="12"/>
+                <polyline points="12 19 5 12 12 5"/>
+              </svg>
+              Previous
+            </button>
+            <button class="step-nav-button primary step-nav-next" aria-label="Next step">
+              Next
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <line x1="5" y1="12" x2="19" y2="12"/>
+                <polyline points="12 5 19 12 12 19"/>
+              </svg>
+            </button>
+          </nav>
+        </section>
+
+        <!-- Step 7: Best Practices -->
+        <section id="step-7" class="step-section" aria-labelledby="step-7-title">
+          <header class="step-header">
+            <span class="step-number">Step 7 of 7</span>
+            <h1 id="step-7-title" class="step-title">Best Practices</h1>
+            <p class="step-duration">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12 6 12 12 16 14"/>
+              </svg>
+              10 minutes
+            </p>
+          </header>
+
+          <p>Memory files are most valuable when they are concise, accurate, and actively maintained. The following guidelines will help you get the most out of the memory system without creating a maintenance burden.</p>
+
+          <h2>What to Store</h2>
+          <ul>
+            <li><strong>Stable preferences and conventions</strong> — things that change infrequently and apply broadly (e.g., "we use camelCase for function names")</li>
+            <li><strong>Non-obvious decisions</strong> — choices that a reasonable developer might not make by default (e.g., "we prefer returning Result types over throwing exceptions")</li>
+            <li><strong>Build and test commands</strong> — reduces the need to look up or re-explain how to run the project</li>
+            <li><strong>Technology constraints</strong> — libraries or patterns the team has agreed to use or avoid (e.g., "do not add new ORM dependencies")</li>
+            <li><strong>In-progress task state</strong> — completed steps, key decisions, and remaining work for multi-day tasks (session scope)</li>
+          </ul>
+
+          <h2>What Not to Store</h2>
+          <ul>
+            <li><strong>Large amounts of code</strong> — memory files are for context, not for pasting entire implementations. Use <code>#file</code> references in Copilot Chat to include specific code</li>
+            <li><strong>Frequently changing details</strong> — version numbers, API responses, configuration values that change often will go stale quickly and confuse Copilot</li>
+            <li><strong>Sensitive information</strong> — never store credentials, API keys, tokens, or private data in memory files (they may be committed to version control)</li>
+            <li><strong>Redundant information</strong> — if something is already captured well in a <code>README.md</code> or <code>.github/copilot-instructions.md</code>, do not duplicate it in a memory file</li>
+            <li><strong>Everything you know about a topic</strong> — the goal is to provide decision-making context, not to reproduce your entire knowledge base</li>
+          </ul>
+
+          <h2>Keeping Memory Files Concise</h2>
+          <ul>
+            <li><strong>Use bullet points</strong> — short, declarative statements are easier for Copilot to act on than paragraphs of prose</li>
+            <li><strong>One topic per file</strong> — split large files into focused files (e.g., <code>coding-style.md</code>, <code>testing.md</code>, <code>git-conventions.md</code>) rather than one monolithic document</li>
+            <li><strong>Review quarterly</strong> — schedule a regular review to remove outdated preferences and update anything that has changed</li>
+            <li><strong>Start small</strong> — add preferences gradually as you notice Copilot making suggestions that do not match your style, rather than writing an exhaustive document upfront</li>
+          </ul>
+
+          <h2>Memory vs. Copilot Instructions</h2>
+          <p>VS Code also supports a <code>.github/copilot-instructions.md</code> file that provides persistent instructions for Copilot across a workspace. Here is how to decide which to use:</p>
+          <table style="width:100%;border-collapse:collapse;margin:1rem 0;">
+            <thead>
+              <tr style="background:var(--color-surface-secondary,#f6f8fa);">
+                <th style="text-align:left;padding:0.5rem 0.75rem;border:1px solid var(--color-border,#d0d7de);">Feature</th>
+                <th style="text-align:left;padding:0.5rem 0.75rem;border:1px solid var(--color-border,#d0d7de);">Copilot Instructions</th>
+                <th style="text-align:left;padding:0.5rem 0.75rem;border:1px solid var(--color-border,#d0d7de);">Memory Files</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="padding:0.5rem 0.75rem;border:1px solid var(--color-border,#d0d7de);">Location</td>
+                <td style="padding:0.5rem 0.75rem;border:1px solid var(--color-border,#d0d7de);"><code>.github/copilot-instructions.md</code></td>
+                <td style="padding:0.5rem 0.75rem;border:1px solid var(--color-border,#d0d7de);">Multiple files across scopes</td>
+              </tr>
+              <tr style="background:var(--color-surface-secondary,#f6f8fa);">
+                <td style="padding:0.5rem 0.75rem;border:1px solid var(--color-border,#d0d7de);">Best for</td>
+                <td style="padding:0.5rem 0.75rem;border:1px solid var(--color-border,#d0d7de);">Immutable rules and constraints</td>
+                <td style="padding:0.5rem 0.75rem;border:1px solid var(--color-border,#d0d7de);">Evolving context and preferences</td>
+              </tr>
+              <tr>
+                <td style="padding:0.5rem 0.75rem;border:1px solid var(--color-border,#d0d7de);">Personal preferences</td>
+                <td style="padding:0.5rem 0.75rem;border:1px solid var(--color-border,#d0d7de);">No (applies to whole repo)</td>
+                <td style="padding:0.5rem 0.75rem;border:1px solid var(--color-border,#d0d7de);">Yes (user scope)</td>
+              </tr>
+              <tr style="background:var(--color-surface-secondary,#f6f8fa);">
+                <td style="padding:0.5rem 0.75rem;border:1px solid var(--color-border,#d0d7de);">In-progress task state</td>
+                <td style="padding:0.5rem 0.75rem;border:1px solid var(--color-border,#d0d7de);">No</td>
+                <td style="padding:0.5rem 0.75rem;border:1px solid var(--color-border,#d0d7de);">Yes (session scope)</td>
+              </tr>
+            </tbody>
+          </table>
+          <p>Use both together: <code>copilot-instructions.md</code> for team-wide rules, and memory files for personal preferences and evolving project context.</p>
+
+          <h2>🎉 Congratulations!</h2>
+          <p>You have completed the Copilot Memory workshop activity! You can now:</p>
+          <ul>
+            <li>Explain the three memory scopes (user, session, repository) and when to use each</li>
+            <li>Create and update user memory to persist personal coding preferences across all projects</li>
+            <li>Use session memory files to track multi-step tasks without re-explaining context</li>
+            <li>Design repository memory that keeps Copilot consistent across an entire team</li>
+            <li>Apply best practices to keep memory files concise, accurate, and maintainable</li>
+          </ul>
+
+          <h2>Additional Resources</h2>
+          <ul>
+            <li><a href="https://docs.github.com/copilot/customizing-copilot/customizing-github-copilot-in-your-organization" target="_blank" rel="noopener noreferrer">Customizing GitHub Copilot in your organization</a></li>
+            <li><a href="https://docs.github.com/copilot/customizing-copilot/adding-repository-custom-instructions-for-github-copilot" target="_blank" rel="noopener noreferrer">Adding repository custom instructions for GitHub Copilot</a></li>
+            <li><a href="https://docs.github.com/copilot" target="_blank" rel="noopener noreferrer">GitHub Copilot Documentation</a></li>
+            <li><a href="https://code.visualstudio.com/docs/copilot/overview" target="_blank" rel="noopener noreferrer">GitHub Copilot in VS Code</a></li>
+          </ul>
+
+          <h3>Next Steps</h3>
+          <p>Continue your Path 3 journey or revisit earlier topics:</p>
+          <ul>
+            <li><a href="extended-capabilities.html#step-1">Copilot CLI</a> — Use AI assistance directly in your terminal</li>
+            <li><a href="extended-capabilities.html#step-2">Copilot SDK</a> — Build your own Copilot extensions</li>
+            <li><a href="extended-capabilities.html#step-3">Agent Skills</a> — Define reusable Copilot behaviours</li>
+            <li><a href="extended-capabilities.html#step-4">Sub-Agents</a> — Coordinate multi-agent workflows</li>
+          </ul>
+
+          <nav class="step-navigation" aria-label="Step navigation">
+            <button class="step-nav-button step-nav-prev" aria-label="Previous step">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <line x1="19" y1="12" x2="5" y2="12"/>
+                <polyline points="12 19 5 12 12 5"/>
+              </svg>
+              Previous
+            </button>
+            <a href="extended-capabilities.html" class="step-nav-button primary">
+              Back to Path 3
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <line x1="5" y1="12" x2="19" y2="12"/>
+                <polyline points="12 5 19 12 12 19"/>
+              </svg>
+            </a>
+          </nav>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- Mobile sidebar toggle button -->
+  <button id="sidebar-toggle" class="sidebar-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+      <line x1="3" y1="12" x2="21" y2="12"/>
+      <line x1="3" y1="6" x2="21" y2="6"/>
+      <line x1="3" y1="18" x2="21" y2="18"/>
+    </svg>
+  </button>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
